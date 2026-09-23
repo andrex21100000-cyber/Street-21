@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Street 21 | Streetwear Guatemala</title>
+<meta name="description" content="Street 21 — ropa streetwear en Guatemala.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:#0b0b0b;color:#fff}
+a{text-decoration:none;color:inherit}
+header{position:sticky;top:0;z-index:10;background:rgba(11,11,11,.94);backdrop-filter:blur(10px);border-bottom:1px solid #252525}
+.nav{max-width:1150px;margin:auto;padding:18px 22px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:25px;font-weight:900;letter-spacing:2px}
+.logo span{color:#aaa}
+nav a{margin-left:20px;color:#ddd;font-size:14px}
+.hero{min-height:78vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:80px 22px;background:radial-gradient(circle at 50% 30%,#252525 0,#111 38%,#080808 75%)}
+.hero h1{font-size:clamp(58px,12vw,130px);line-height:.85;letter-spacing:-6px;font-weight:950}
+.hero p{margin:28px auto;max-width:600px;color:#bdbdbd;font-size:16px;line-height:1.6}
+.btn{display:inline-block;background:#fff;color:#000;padding:14px 25px;border-radius:3px;font-weight:800;font-size:14px}
+section{max-width:1150px;margin:auto;padding:75px 22px}
+.title{font-size:34px;margin-bottom:10px}
+.subtitle{color:#999;margin-bottom:30px}
+.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px}
+.card{background:#151515;border:1px solid #292929;border-radius:8px;overflow:hidden}
+.photo{height:300px;background:#222;display:flex;align-items:center;justify-content:center;color:#666;font-size:13px}
+.photo img{width:100%;height:100%;object-fit:cover}
+.info{padding:18px}
+.info h3{font-size:17px;margin-bottom:8px}
+.price{font-weight:800;margin-bottom:15px}
+.buy{width:100%;border:0;background:#fff;color:#000;padding:12px;border-radius:3px;font-weight:800;cursor:pointer}
+.about{border-top:1px solid #252525;border-bottom:1px solid #252525;text-align:center}
+.about p{max-width:700px;margin:15px auto;color:#aaa;line-height:1.7}
+footer{text-align:center;padding:35px 20px;color:#777;font-size:13px}
+.cart{position:fixed;right:18px;bottom:18px;background:#fff;color:#000;border:0;border-radius:50px;padding:15px 20px;font-weight:900;box-shadow:0 8px 30px #000;cursor:pointer}
+@media(max-width:650px){nav a{margin-left:10px;font-size:12px}.hero h1{letter-spacing:-3px}.photo{height:260px}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="logo">STREET <span>21</span></div>
+    <nav>
+      <a href="#shop">SHOP</a>
+      <a href="#about">NOSOTROS</a>
+      <a href="#contact">CONTACTO</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div>
+    <h1>STREET<br>21</h1>
+    <p>Streetwear seleccionado en Guatemala. Essentials, BAPE, Hellstar, Sp5der, Stüssy, Supreme y más.</p>
+    <a class="btn" href="#shop">VER COLECCIÓN</a>
+  </div>
+</section>
+
+<section id="shop">
+  <h2 class="title">NEW DROP</h2>
+  <p class="subtitle">Piezas disponibles actualmente.</p>
+  <div class="products">
+
+    <!-- EDITA LOS PRODUCTOS AQUÍ -->
+    <article class="card">
+      <div class="photo">AQUÍ VA LA FOTO</div>
+      <div class="info">
+        <h3>Street 21 Tee — Blanca</h3>
+        <div class="price">Q250</div>
+        <button class="buy" onclick="order('Street 21 Tee — Blanca')">COMPRAR</button>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="photo">AQUÍ VA LA FOTO</div>
+      <div class="info">
+        <h3>Street 21 Tee — Negra</h3>
+        <div class="price">Q250</div>
+        <button class="buy" onclick="order('Street 21 Tee — Negra')">COMPRAR</button>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="photo">AQUÍ VA LA FOTO</div>
+      <div class="info">
+        <h3>Essentials Style Tee</h3>
+        <div class="price">Q300</div>
+        <button class="buy" onclick="order('Essentials Style Tee')">COMPRAR</button>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<section class="about" id="about">
+  <h2 class="title">STREET 21</h2>
+  <p>Una tienda de streetwear enfocada en piezas que combinan estilo, cultura urbana y exclusividad. Nacimos en Guatemala para traer nuevos drops y prendas seleccionadas.</p>
+</section>
+
+<section id="contact">
+  <h2 class="title">CONTACTO</h2>
+  <p class="subtitle">Para pedidos, tallas y disponibilidad escríbenos.</p>
+  <a class="btn" href="https://instagram.com/street21gt" target="_blank">INSTAGRAM @STREET21GT</a>
+</section>
+</main>
+
+<button class="cart" onclick="order('Quiero hacer un pedido')">PEDIR</button>
+
+<footer>© 2026 STREET 21 · GUATEMALA</footer>
+
+<script>
+function order(product){
+  const phone = "50200000000"; // CAMBIA ESTE NÚMERO POR TU WHATSAPP
+  const text = encodeURIComponent("Hola Street 21 👋 Estoy interesado en: " + product);
+  window.open("https://wa.me/" + phone + "?text=" + text, "_blank");
+}
+</script>
+</body>
+</html>
