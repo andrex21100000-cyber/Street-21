@@ -1,11 +1,374 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Street 21</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>STREET 21</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #ffffff;
+      color: #000000;
+    }
+
+    /* NAVBAR */
+
+    header {
+      width: 100%;
+      padding: 22px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #e5e5e5;
+      position: sticky;
+      top: 0;
+      background: rgba(255,255,255,0.95);
+      z-index: 100;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 4px;
+    }
+
+    nav {
+      display: flex;
+      gap: 25px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #000;
+      font-size: 13px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    /* HERO */
+
+    .hero {
+      min-height: 80vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 40px 20px;
+      background: #000;
+      color: #fff;
+    }
+
+    .hero-content {
+      max-width: 850px;
+    }
+
+    .hero h1 {
+      font-size: clamp(55px, 12vw, 125px);
+      font-weight: 900;
+      letter-spacing: -5px;
+      line-height: 0.9;
+    }
+
+    .hero p {
+      margin-top: 25px;
+      font-size: 14px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+
+    .hero-button {
+      display: inline-block;
+      margin-top: 35px;
+      padding: 16px 35px;
+      background: #fff;
+      color: #000;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      transition: 0.3s;
+    }
+
+    .hero-button:hover {
+      background: #ddd;
+    }
+
+    /* ABOUT */
+
+    .about {
+      padding: 90px 25px;
+      text-align: center;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .about h2 {
+      font-size: 35px;
+      margin-bottom: 20px;
+      letter-spacing: 2px;
+    }
+
+    .about p {
+      color: #555;
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    /* COLLECTION */
+
+    .collection {
+      padding: 70px 25px 100px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 35px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 15px;
+    }
+
+    .section-title h2 {
+      font-size: 25px;
+      letter-spacing: 2px;
+    }
+
+    .section-title span {
+      font-size: 12px;
+      color: #777;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .product {
+      background: #f3f3f3;
+      min-height: 420px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .product-content {
+      padding: 30px;
+    }
+
+    .product h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .product p {
+      color: #777;
+      font-size: 13px;
+    }
+
+    /* FOOTER */
+
+    footer {
+      background: #000;
+      color: #fff;
+      padding: 60px 25px 30px;
+      text-align: center;
+    }
+
+    footer .footer-logo {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: 5px;
+      margin-bottom: 20px;
+    }
+
+    footer p {
+      color: #aaa;
+      font-size: 12px;
+      margin-bottom: 30px;
+    }
+
+    .copyright {
+      border-top: 1px solid #333;
+      padding-top: 20px;
+      color: #777;
+      font-size: 11px;
+    }
+
+    /* CELULAR */
+
+    @media (max-width: 700px) {
+
+      header {
+        padding: 18px 20px;
+      }
+
+      .logo {
+        font-size: 18px;
+      }
+
+      nav {
+        gap: 12px;
+      }
+
+      nav a {
+        font-size: 10px;
+      }
+
+      .hero {
+        min-height: 75vh;
+      }
+
+      .hero h1 {
+        letter-spacing: -3px;
+      }
+
+      .hero p {
+        font-size: 11px;
+        letter-spacing: 2px;
+      }
+
+      .products {
+        grid-template-columns: 1fr;
+      }
+
+      .product {
+        min-height: 350px;
+      }
+
+      .about {
+        padding: 70px 25px;
+      }
+    }
+  </style>
 </head>
+
 <body>
-  <h1>STREET 21</h1>
-  <p>Streetwear en Guatemala</p>
+
+  <header>
+    <div class="logo">STREET 21</div>
+
+    <nav>
+      <a href="#inicio">INICIO</a>
+      <a href="#coleccion">COLECCIÓN</a>
+      <a href="#contacto">CONTACTO</a>
+    </nav>
+  </header>
+
+
+  <section class="hero" id="inicio">
+
+    <div class="hero-content">
+
+      <h1>STREET 21</h1>
+
+      <p>Streetwear seleccionado · Guatemala</p>
+
+      <a href="#coleccion" class="hero-button">
+        VER COLECCIÓN
+      </a>
+
+    </div>
+
+  </section>
+
+
+  <section class="about">
+
+    <h2>STREETWEAR.</h2>
+
+    <p>
+      Una selección de prendas inspiradas en la cultura
+      streetwear. Descubre piezas seleccionadas para
+      formar parte de tu estilo.
+    </p>
+
+  </section>
+
+
+  <section class="collection" id="coleccion">
+
+    <div class="section-title">
+
+      <h2>COLECCIÓN</h2>
+
+      <span>STREET 21 / 001</span>
+
+    </div>
+
+
+    <div class="products">
+
+      <div class="product">
+
+        <div class="product-content">
+
+          <h3>PRÓXIMAMENTE</h3>
+
+          <p>Nueva colección Street 21</p>
+
+        </div>
+
+      </div>
+
+
+      <div class="product">
+
+        <div class="product-content">
+
+          <h3>PRÓXIMAMENTE</h3>
+
+          <p>Nuevas piezas próximamente</p>
+
+        </div>
+
+      </div>
+
+
+      <div class="product">
+
+        <div class="product-content">
+
+          <h3>PRÓXIMAMENTE</h3>
+
+          <p>Stay tuned.</p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <footer id="contacto">
+
+    <div class="footer-logo">
+      STREET 21
+    </div>
+
+    <p>
+      STREETWEAR · GUATEMALA
+    </p>
+
+    <div class="copyright">
+      © 2026 STREET 21. ALL RIGHTS RESERVED.
+    </div>
+
+  </footer>
+
 </body>
 </html>
