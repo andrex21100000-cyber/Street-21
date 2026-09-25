@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Street 21 — Admin</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f6f6f6;color:#111}
+header{background:#111;color:#fff;padding:18px 6%;display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:900;letter-spacing:2px;font-size:22px}.wrap{max-width:900px;margin:25px auto;padding:0 18px}
+.box{background:#fff;border-radius:16px;padding:22px;margin-bottom:20px;box-shadow:0 2px 12px #0000000d}
+h1,h2{margin-top:0}label{display:block;font-weight:700;margin:13px 0 6px}
+input,textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:9px;font:inherit}textarea{min-height:90px}
+button{border:0;border-radius:9px;padding:12px 15px;font-weight:700;cursor:pointer}.primary{background:#111;color:#fff}.danger{background:#b00020;color:#fff}.muted{background:#eee}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.product{border:1px solid #eee;border-radius:12px;padding:14px;margin:12px 0;display:flex;gap:14px;align-items:center}.thumb{width:85px;height:85px;background:#eee;border-radius:9px;overflow:hidden;flex:none}.thumb img{width:100%;height:100%;object-fit:cover}.product-info{flex:1}.actions{display:flex;gap:8px;flex-wrap:wrap}.small{font-size:12px;color:#666}.hidden{display:none}
+@media(max-width:650px){.row{grid-template-columns:1fr}.product{align-items:flex-start;flex-direction:column}.thumb{width:100%;height:180px}}
+</style>
+</head>
+<body>
+<header><div class="logo">STREET 21 · ADMIN</div><button id="logout" class="muted hidden">Cerrar sesión</button></header>
+<div class="wrap">
+<div id="loginBox" class="box">
+<h1>Acceso administrador 🔐</h1>
+<p>Inicia sesión para administrar los productos.</p>
+<form id="loginForm">
+<label>Correo</label><input id="email" type="email" required>
+<label>Contraseña</label><input id="password" type="password" required>
+<br><br><button class="primary" type="submit">Entrar</button>
+</form>
+<p id="loginMsg" class="small"></p>
+</div>
+
+<div id="adminBox" class="hidden">
+<div class="box">
+<h2>Agregar producto</h2>
+<form id="productForm">
+<div class="row"><div><label>Nombre</label><input id="name" required placeholder="Ej. Essentials Tee"></div>
+<div><label>Precio (Q)</label><input id="price" type="number" min="0" step="0.01" required placeholder="300"></div></div>
+<label>Descripción</label><textarea id="description" placeholder="Talla, color, detalles..."></textarea>
+<label>Fotos</label><input id="images" type="file" accept="image/*" multiple required>
+<p class="small">Puedes seleccionar varias fotos. Se subirán al almacenamiento de STREET 21.</p>
+<button class="primary" type="submit">Guardar producto</button>
+<p id="productMsg" class="small"></p>
+</form>
+</div>
+
+<div class="box"><h2>Productos</h2><div id="list">Cargando...</div></div>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL="https://entphlnycmrgulvvyign.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="PEGA_AQUI_TU_SB_PUBLISHABLE_KEY";
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+const loginBox=document.getElementById("loginBox"),adminBox=document.getElementById("adminBox"),logout=document.getElementById("logout");
+const loginMsg=document.getElementById("loginMsg"),productMsg=document.getElementById("productMsg"),list=document.getElementById("list");
+
+async function checkSession(){const {data}=await db.auth.getSession(); if(data.session) showAdmin(); else showLogin();}
+function showLogin(){loginBox.classList.remove("hidden");adminBox.classList.add("hidden");logout.classList.add("hidden")}
+function showAdmin(){loginBox.classList.add("hidden");adminBox.classList.remove("hidden");logout.classList.remove("hidden");loadProducts();}
+document.getElementById("loginForm").addEventListener("submit",async e=>{
+ e.preventDefault();loginMsg.textContent="Entrando...";
+ const {error}=await db.auth.signInWithPassword({email:email.value.trim(),password:password.value});
+ loginMsg.textContent=error?error.message:"";
+ if(!error)showAdmin();
+});
+logout.onclick=async()=>{await db.auth.signOut();showLogin();};
+
+async function loadProducts(){
+ const {data,error}=await db.from("products").select("*").order("created_at",{ascending:false});
+ if(error){list.textContent=error.message;return}
+ if(!data.length){list.textContent="No hay productos.";return}
+ list.innerHTML="";
+ data.forEach(p=>{
+  const el=document.createElement("div");el.className="product";
+  const thumb=document.createElement("div");thumb.className="thumb";
+  if(Array.isArray(p.images)&&p.images[0]){const img=document.createElement("img");img.src=p.images[0];thumb.appendChild(img)}
+  else thumb.textContent="Sin foto";
+  const info=document.createElement("div");info.className="product-info";
+  info.innerHTML="<strong>"+esc(p.name)+"</strong><br>Q "+Number(p.price||0).toLocaleString("es-GT")+"<br><span class='small'>"+esc(p.description||"")+"</span>";
+  const acts=document.createElement("div");acts.className="actions";
+  const stock=document.createElement("button");stock.className="muted";stock.textContent=p.sold_out?"Poner disponible":"Marcar agotado";
+  stock.onclick=async()=>{const {error}=await db.from("products").update({sold_out:!p.sold_out}).eq("id",p.id);if(error)alert(error.message);else loadProducts()};
+  const del=document.createElement("button");del.className="danger";del.textContent="Eliminar";
+  del.onclick=async()=>{if(!confirm("¿Eliminar este producto?"))return;const {error}=await db.from("products").delete().eq("id",p.id);if(error)alert(error.message);else loadProducts()};
+  acts.append(stock,del);el.append(thumb,info,acts);list.appendChild(el);
+ });
+}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
+
+document.getElementById("productForm").addEventListener("submit",async e=>{
+ e.preventDefault();productMsg.textContent="Subiendo...";
+ const files=[...document.getElementById("images").files]; if(!files.length){productMsg.textContent="Selecciona al menos una foto.";return}
+ const urls=[];
+ for(const file of files){
+   const safe=file.name.replace(/[^a-zA-Z0-9._-]/g,"-");
+   const path=crypto.randomUUID()+"-"+safe;
+   const {error}=await db.storage.from("product-images").upload(path,file,{upsert:false});
+   if(error){productMsg.textContent=error.message;return}
+   const {data}=db.storage.from("product-images").getPublicUrl(path);
+   urls.push(data.publicUrl);
+ }
+ const {error}=await db.from("products").insert({name:document.getElementById("name").value.trim(),price:Number(document.getElementById("price").value),description:document.getElementById("description").value.trim(),images:urls,sold_out:false});
+ if(error){productMsg.textContent=error.message;return}
+ productMsg.textContent="Producto guardado ✅";e.target.reset();loadProducts();
+});
+checkSession();
+</script>
+</body>
+</html>
