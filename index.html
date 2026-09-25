@@ -1,628 +1,517 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Street 21</title>
 
-  <title>STREET 21 — Streetwear Guatemala</title>
+<style>
+*{box-sizing:border-box}
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+body{
+  margin:0;
+  background:#fff;
+  color:#111;
+  font-family:Arial,sans-serif
+}
 
-    html {
-      scroll-behavior: smooth;
-    }
+header{
+  padding:22px 6%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid #eee
+}
 
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: #fff;
-      color: #000;
-    }
+.logo{
+  font-weight:900;
+  letter-spacing:2px;
+  font-size:24px
+}
 
-    header {
-      width: 100%;
-      padding: 20px 30px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid #e5e5e5;
-      position: sticky;
-      top: 0;
-      background: rgba(255,255,255,.96);
-      backdrop-filter: blur(10px);
-      z-index: 100;
-    }
+.admin{
+  background:#111;
+  color:#fff;
+  border:0;
+  border-radius:8px;
+  padding:11px 15px;
+  font-weight:700
+}
 
-    .logo {
-      font-size: 21px;
-      font-weight: 900;
-      letter-spacing: 4px;
-    }
+.hero{
+  padding:55px 6% 30px
+}
 
-    nav {
-      display: flex;
-      gap: 20px;
-    }
+.hero h1{
+  font-size:clamp(38px,8vw,78px);
+  margin:0 0 10px;
+  letter-spacing:-3px
+}
 
-    nav a {
-      text-decoration: none;
-      color: #000;
-      font-size: 11px;
-      font-weight: bold;
-      letter-spacing: 1px;
-    }
+.hero p{
+  color:#666
+}
 
-    .hero {
-      min-height: 78vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 40px 20px;
-      background: #000;
-      color: #fff;
-    }
+.products{
+  padding:20px 6% 70px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:24px
+}
 
-    .hero h1 {
-      font-size: clamp(55px, 12vw, 125px);
-      font-weight: 900;
-      letter-spacing: -5px;
-      line-height: .9;
-    }
+.card{
+  border:1px solid #eee;
+  border-radius:14px;
+  overflow:hidden;
+  background:#fff
+}
 
-    .hero p {
-      margin-top: 25px;
-      font-size: 12px;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-    }
+.photo{
+  aspect-ratio:1/1;
+  background:#f3f3f3;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#999
+}
 
-    .hero-button {
-      display: inline-block;
-      margin-top: 35px;
-      padding: 16px 35px;
-      background: #fff;
-      color: #000;
-      text-decoration: none;
-      font-size: 11px;
-      font-weight: bold;
-      letter-spacing: 2px;
-      transition: .2s;
-    }
+.photo img{
+  width:100%;
+  height:100%;
+  object-fit:cover
+}
 
-    .hero-button:hover {
-      transform: scale(1.04);
-    }
+.info{
+  padding:15px
+}
 
-    .about {
-      padding: 85px 25px;
-      text-align: center;
-      max-width: 850px;
-      margin: auto;
-    }
+.info h3{
+  margin:0 0 7px
+}
 
-    .about h2 {
-      font-size: 35px;
-      margin-bottom: 20px;
-      letter-spacing: 2px;
-    }
+.price{
+  font-weight:800
+}
 
-    .about p {
-      color: #555;
-      line-height: 1.8;
-      font-size: 15px;
-    }
+.empty{
+  grid-column:1/-1;
+  text-align:center;
+  color:#777;
+  padding:50px
+}
 
-    .collection {
-      padding: 60px 25px 100px;
-      max-width: 1200px;
-      margin: auto;
-    }
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  padding:20px;
+  z-index:10;
+  overflow:auto
+}
 
-    .section-title {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 35px;
-      border-bottom: 1px solid #ddd;
-      padding-bottom: 15px;
-    }
+.box{
+  max-width:520px;
+  margin:40px auto;
+  background:#fff;
+  border-radius:18px;
+  padding:24px
+}
 
-    .section-title h2 {
-      font-size: 25px;
-      letter-spacing: 2px;
-    }
+.box h2{
+  margin-top:0
+}
 
-    .section-title span {
-      font-size: 12px;
-      color: #777;
-    }
+label{
+  display:block;
+  font-weight:700;
+  margin:14px 0 6px
+}
 
-    .products {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-    }
+input,textarea{
+  width:100%;
+  padding:12px;
+  border:1px solid #ddd;
+  border-radius:9px;
+  font:inherit
+}
 
-    .product {
-      background: #f3f3f3;
-      overflow: hidden;
-      transition: .25s;
-    }
+textarea{
+  min-height:90px
+}
 
-    .product:hover {
-      transform: translateY(-5px);
-    }
+.actions{
+  display:flex;
+  gap:10px;
+  margin-top:18px
+}
 
-    .product-image {
-      height: 390px;
-      background: #e9e9e9;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #999;
-      font-size: 11px;
-      letter-spacing: 2px;
-    }
+.actions button{
+  flex:1;
+  padding:13px;
+  border:0;
+  border-radius:9px;
+  font-weight:700
+}
 
-    .product-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
+.save{
+  background:#111;
+  color:#fff
+}
 
-    .product-info {
-      padding: 22px;
-      background: #fff;
-    }
+.cancel{
+  background:#eee
+}
 
-    .badge {
-      display: inline-block;
-      background: #000;
-      color: #fff;
-      padding: 5px 8px;
-      font-size: 9px;
-      font-weight: bold;
-      letter-spacing: 1px;
-      margin-bottom: 10px;
-    }
+.preview{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:10px
+}
 
-    .product h3 {
-      font-size: 17px;
-      margin-bottom: 9px;
-    }
+.preview img{
+  width:75px;
+  height:75px;
+  object-fit:cover;
+  border-radius:8px
+}
 
-    .price {
-      font-size: 15px;
-      font-weight: bold;
-      margin-bottom: 16px;
-    }
-
-    .shipping {
-      color: #777;
-      font-weight: normal;
-      font-size: 12px;
-    }
-
-    .buy-button {
-      display: block;
-      width: 100%;
-      padding: 14px;
-      background: #000;
-      color: #fff;
-      text-align: center;
-      text-decoration: none;
-      font-size: 11px;
-      font-weight: bold;
-      letter-spacing: 2px;
-      transition: .2s;
-    }
-
-    .buy-button:hover {
-      background: #222;
-    }
-
-    .info-section {
-      background: #f5f5f5;
-      padding: 75px 25px;
-      text-align: center;
-    }
-
-    .info-section h2 {
-      font-size: 28px;
-      letter-spacing: 2px;
-      margin-bottom: 20px;
-    }
-
-    .info-section p {
-      color: #555;
-      max-width: 650px;
-      margin: auto;
-      line-height: 1.8;
-      font-size: 14px;
-    }
-
-    .social {
-      padding: 75px 25px;
-      text-align: center;
-    }
-
-    .social h2 {
-      font-size: 28px;
-      letter-spacing: 2px;
-      margin-bottom: 25px;
-    }
-
-    .social-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .social-button {
-      display: inline-block;
-      padding: 14px 25px;
-      border: 1px solid #000;
-      color: #000;
-      text-decoration: none;
-      font-size: 11px;
-      font-weight: bold;
-      letter-spacing: 1px;
-      transition: .2s;
-    }
-
-    .social-button:hover {
-      background: #000;
-      color: #fff;
-    }
-
-    footer {
-      background: #000;
-      color: #fff;
-      padding: 60px 25px 30px;
-      text-align: center;
-    }
-
-    .footer-logo {
-      font-size: 28px;
-      font-weight: 900;
-      letter-spacing: 5px;
-      margin-bottom: 15px;
-    }
-
-    footer p {
-      color: #aaa;
-      font-size: 12px;
-      margin-bottom: 30px;
-    }
-
-    .copyright {
-      border-top: 1px solid #333;
-      padding-top: 20px;
-      color: #777;
-      font-size: 11px;
-    }
-
-    .whatsapp {
-      position: fixed;
-      right: 18px;
-      bottom: 18px;
-      background: #000;
-      color: #fff;
-      padding: 15px 18px;
-      border-radius: 50px;
-      text-decoration: none;
-      font-size: 11px;
-      font-weight: bold;
-      letter-spacing: 1px;
-      z-index: 200;
-      box-shadow: 0 5px 20px rgba(0,0,0,.25);
-    }
-
-    @media (max-width: 700px) {
-
-      header {
-        padding: 17px 18px;
-      }
-
-      .logo {
-        font-size: 17px;
-      }
-
-      nav {
-        gap: 9px;
-      }
-
-      nav a {
-        font-size: 8px;
-      }
-
-      .hero h1 {
-        letter-spacing: -3px;
-      }
-
-      .hero p {
-        font-size: 9px;
-        letter-spacing: 2px;
-      }
-
-      .products {
-        grid-template-columns: 1fr;
-      }
-
-      .product-image {
-        height: 360px;
-      }
-
-      .collection {
-        padding-left: 18px;
-        padding-right: 18px;
-      }
-
-      .section-title span {
-        display: none;
-      }
-    }
-  </style>
+.note{
+  font-size:12px;
+  color:#777;
+  margin-top:8px
+}
+</style>
 </head>
 
 <body>
 
 <header>
-
-  <div class="logo">
-    STREET 21
-  </div>
-
-  <nav>
-    <a href="#inicio">INICIO</a>
-    <a href="#coleccion">COLECCIÓN</a>
-    <a href="#contacto">CONTACTO</a>
-  </nav>
-
+  <div class="logo">STREET 21</div>
+  <button class="admin" id="openAdmin">+ Agregar producto</button>
 </header>
 
-
-<section class="hero" id="inicio">
-
-  <div>
-
-    <h1>STREET 21</h1>
-
-    <p>
-      Streetwear seleccionado · Guatemala
-    </p>
-
-    <a href="#coleccion" class="hero-button">
-      VER COLECCIÓN
-    </a>
-
-  </div>
-
+<section class="hero">
+  <h1>STREET 21</h1>
+  <p>Streetwear seleccionado. Exclusivo. Sin complicaciones.</p>
 </section>
 
+<section class="products" id="products"></section>
 
-<section class="about">
+<div class="modal" id="modal">
 
-  <h2>STREETWEAR.</h2>
+  <div class="box">
 
-  <p>
-    Una selección de prendas y accesorios inspirados
-    en la cultura streetwear. Descubre piezas
-    seleccionadas para formar parte de tu estilo.
-  </p>
+    <h2>Agregar producto</h2>
 
-</section>
+    <form id="productForm">
 
+      <label>Nombre</label>
+      <input id="name" required placeholder="Ej. Essentials Tee">
 
-<section class="collection" id="coleccion">
+      <label>Precio (Q)</label>
+      <input
+        id="price"
+        type="number"
+        min="0"
+        step="0.01"
+        required
+        placeholder="300"
+      >
 
-  <div class="section-title">
+      <label>Descripción</label>
+      <textarea
+        id="desc"
+        placeholder="Talla, color, detalles..."
+      ></textarea>
 
-    <h2>COLECCIÓN</h2>
+      <label>Fotos</label>
 
-    <span>STREET 21 / 001</span>
+      <input
+        id="photos"
+        type="file"
+        accept="image/*"
+        multiple
+        required
+      >
+
+      <div class="preview" id="preview"></div>
+
+      <div class="note">
+        Puedes seleccionar varias fotos directamente desde tu iPhone.
+      </div>
+
+      <div class="actions">
+
+        <button
+          type="button"
+          class="cancel"
+          id="close"
+        >
+          Cancelar
+        </button>
+
+        <button
+          class="save"
+          type="submit"
+        >
+          Guardar producto
+        </button>
+
+      </div>
+
+    </form>
 
   </div>
 
+</div>
 
-  <div class="products">
+<script>
 
+const modal = document.getElementById("modal");
 
-    <!-- PRODUCTO 1 -->
+const form = document.getElementById("productForm");
 
-    <div class="product">
+const photos = document.getElementById("photos");
 
-      <div class="product-image">
-        FOTO DEL PRODUCTO
-      </div>
+const preview = document.getElementById("preview");
 
-      <div class="product-info">
+const products = document.getElementById("products");
 
-        <span class="badge">DISPONIBLE</span>
 
-        <h3>CAMISA ESSENTIALS NEGRA</h3>
+function getProducts(){
 
-        <p class="price">
-          Q250 <span class="shipping">+ envío</span>
-        </p>
+  return JSON.parse(
+    localStorage.getItem("street21_products") || "[]"
+  );
 
-        <a
-          class="buy-button"
-          href="https://wa.me/50248501010?text=Hola%20Street%2021,%20quiero%20comprar%20la%20Camisa%20Essentials%20Negra"
-          target="_blank">
-          COMPRAR POR WHATSAPP
-        </a>
+}
 
-      </div>
 
-    </div>
+function saveProducts(list){
 
+  localStorage.setItem(
+    "street21_products",
+    JSON.stringify(list)
+  );
 
-    <!-- PRODUCTO 2 -->
+}
 
-    <div class="product">
 
-      <div class="product-image">
-        FOTO DEL PRODUCTO
-      </div>
+function render(){
 
-      <div class="product-info">
+  const list = getProducts();
 
-        <span class="badge">DISPONIBLE</span>
+  products.innerHTML = "";
 
-        <h3>CAMISA ESSENTIALS BLANCA</h3>
+  if(!list.length){
 
-        <p class="price">
-          Q250 <span class="shipping">+ envío</span>
-        </p>
+    products.innerHTML =
+      '<div class="empty">Todavía no hay productos. Agrega el primero arriba. 🔥</div>';
 
-        <a
-          class="buy-button"
-          href="https://wa.me/50248501010?text=Hola%20Street%2021,%20quiero%20comprar%20la%20Camisa%20Essentials%20Blanca"
-          target="_blank">
-          COMPRAR POR WHATSAPP
-        </a>
+    return;
+  }
 
-      </div>
 
-    </div>
+  list.forEach(function(p){
 
+    const card = document.createElement("article");
 
-    <!-- PRODUCTO 3 -->
+    card.className = "card";
 
-    <div class="product">
 
-      <div class="product-image">
-        FOTO DEL PRODUCTO
-      </div>
+    const photo = document.createElement("div");
 
-      <div class="product-info">
+    photo.className = "photo";
 
-        <span class="badge">DISPONIBLE</span>
 
-        <h3>BILLETERA SUPREME ROJO VINO</h3>
+    if(p.images && p.images[0]){
 
-        <p class="price">
-          Q200 <span class="shipping">+ envío</span>
-        </p>
+      const img = document.createElement("img");
 
-        <a
-          class="buy-button"
-          href="https://wa.me/50248501010?text=Hola%20Street%2021,%20quiero%20comprar%20la%20Billetera%20Supreme%20Rojo%20Vino"
-          target="_blank">
-          COMPRAR POR WHATSAPP
-        </a>
+      img.src = p.images[0];
 
-      </div>
+      photo.appendChild(img);
 
-    </div>
+    }else{
 
+      photo.textContent = "Sin foto";
 
-    <!-- PRODUCTO 4 -->
+    }
 
-    <div class="product">
 
-      <div class="product-image">
-        FOTO DEL PRODUCTO
-      </div>
+    const info = document.createElement("div");
 
-      <div class="product-info">
+    info.className = "info";
 
-        <span class="badge">DISPONIBLE</span>
 
-        <h3>BILLETERA SUPREME NEGRA</h3>
+    const title = document.createElement("h3");
 
-        <p class="price">
-          Q200 <span class="shipping">+ envío</span>
-        </p>
+    title.textContent = p.name;
 
-        <a
-          class="buy-button"
-          href="https://wa.me/50248501010?text=Hola%20Street%2021,%20quiero%20comprar%20la%20Billetera%20Supreme%20Negra"
-          target="_blank">
-          COMPRAR POR WHATSAPP
-        </a>
 
-      </div>
+    const price = document.createElement("div");
 
-    </div>
+    price.className = "price";
 
+    price.textContent =
+      "Q " + Number(p.price).toLocaleString("es-GT");
 
-  </div>
 
-</section>
+    const description = document.createElement("p");
 
+    description.textContent = p.desc || "";
 
-<section class="info-section">
 
-  <h2>ENVÍOS</h2>
+    info.appendChild(title);
 
-  <p>
-    Realizamos envíos dentro de Guatemala.
-    Para conocer disponibilidad, costo de envío
-    y coordinar tu pedido, escríbenos directamente
-    por WhatsApp.
-  </p>
+    info.appendChild(price);
 
-</section>
+    info.appendChild(description);
 
 
-<section class="social" id="contacto">
+    card.appendChild(photo);
 
-  <h2>SÍGUENOS</h2>
+    card.appendChild(info);
 
-  <div class="social-buttons">
 
-    <a
-      class="social-button"
-      href="https://instagram.com/street21gt"
-      target="_blank">
-      INSTAGRAM @STREET21GT
-    </a>
+    products.appendChild(card);
 
-    <a
-      class="social-button"
-      href="https://wa.me/50248501010"
-      target="_blank">
-      WHATSAPP
-    </a>
+  });
 
-  </div>
+}
 
-</section>
 
+document.getElementById("openAdmin").onclick =
+  function(){
 
-<footer>
+    modal.style.display = "block";
 
-  <div class="footer-logo">
-    STREET 21
-  </div>
+  };
 
-  <p>
-    STREETWEAR · GUATEMALA
-  </p>
 
-  <div class="copyright">
-    © 2026 STREET 21. ALL RIGHTS RESERVED.
-  </div>
+document.getElementById("close").onclick =
+  function(){
 
-</footer>
+    modal.style.display = "none";
 
+  };
 
-<a
-  class="whatsapp"
-  href="https://wa.me/50248501010"
-  target="_blank">
-  WHATSAPP
-</a>
 
+modal.onclick =
+  function(e){
+
+    if(e.target === modal){
+
+      modal.style.display = "none";
+
+    }
+
+  };
+
+
+photos.onchange =
+  function(){
+
+    preview.innerHTML = "";
+
+    Array.from(photos.files).forEach(function(file){
+
+      const reader = new FileReader();
+
+      reader.onload =
+        function(e){
+
+          const img = document.createElement("img");
+
+          img.src = e.target.result;
+
+          preview.appendChild(img);
+
+        };
+
+      reader.readAsDataURL(file);
+
+    });
+
+  };
+
+
+form.onsubmit =
+  async function(e){
+
+    e.preventDefault();
+
+
+    const files =
+      Array.from(photos.files);
+
+
+    const images =
+      await Promise.all(
+
+        files.map(function(file){
+
+          return new Promise(function(resolve){
+
+            const reader =
+              new FileReader();
+
+            reader.onload =
+              function(){
+
+                resolve(reader.result);
+
+              };
+
+            reader.readAsDataURL(file);
+
+          });
+
+        })
+
+      );
+
+
+    const item = {
+
+      name:
+        document.getElementById("name").value.trim(),
+
+      price:
+        document.getElementById("price").value,
+
+      desc:
+        document.getElementById("desc").value.trim(),
+
+      images:
+        images
+
+    };
+
+
+    const list = getProducts();
+
+    list.push(item);
+
+    saveProducts(list);
+
+    render();
+
+
+    form.reset();
+
+    preview.innerHTML = "";
+
+    modal.style.display = "none";
+
+  };
+
+
+render();
+
+</script>
 
 </body>
 </html>
