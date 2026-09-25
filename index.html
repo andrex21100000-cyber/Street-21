@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -10,321 +9,218 @@
 *{box-sizing:border-box}
 
 body{
-  margin:0;
-  background:#fff;
-  color:#111;
-  font-family:Arial,sans-serif
+margin:0;
+font-family:Arial,sans-serif;
+background:#fff;
+color:#111
 }
 
 header{
-  padding:22px 6%;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  border-bottom:1px solid #ddd
+padding:22px 6%;
+display:flex;
+justify-content:space-between;
+align-items:center;
+border-bottom:1px solid #eee
 }
 
 .logo{
-  font-size:28px;
-  font-weight:900;
-  letter-spacing:2px
+font-size:24px;
+font-weight:900;
+letter-spacing:2px
 }
 
-nav a{
-  margin-left:25px;
-  text-decoration:none;
-  color:#111;
-  font-size:14px;
-  font-weight:bold
+.admin{
+background:#111;
+color:#fff;
+border:0;
+padding:12px 16px;
+border-radius:9px;
+font-weight:700
 }
 
 .hero{
-  min-height:75vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:60px 20px;
-  background:#f4f4f4
+padding:55px 6% 30px
 }
 
 .hero h1{
-  font-size:clamp(60px,12vw,130px);
-  line-height:.85;
-  margin:0;
-  letter-spacing:-6px
+font-size:clamp(42px,9vw,80px);
+margin:0;
+letter-spacing:-4px
 }
 
 .hero p{
-  max-width:600px;
-  margin:25px auto;
-  color:#555;
-  line-height:1.6
-}
-
-.btn{
-  display:inline-block;
-  background:#111;
-  color:#fff;
-  padding:14px 25px;
-  text-decoration:none;
-  font-weight:bold;
-  border-radius:3px
-}
-
-section{
-  max-width:1150px;
-  margin:auto;
-  padding:70px 22px
-}
-
-.title{
-  font-size:34px;
-  margin-bottom:10px
-}
-
-.subtitle{
-  color:#777;
-  margin-bottom:30px
+color:#666
 }
 
 .products{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
-  gap:20px
+padding:20px 6% 70px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:24px
 }
 
 .card{
-  background:#fff;
-  border:1px solid #ddd;
-  border-radius:8px;
-  overflow:hidden
+border:1px solid #eee;
+border-radius:14px;
+overflow:hidden;
+background:#fff
 }
 
-.photo{
-  height:300px;
-  background:#eee;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#888;
-  font-size:13px
+.gallery{
+position:relative;
+aspect-ratio:1/1;
+background:#f3f3f3
 }
 
-.photo img{
-  width:100%;
-  height:100%;
-  object-fit:cover
+.gallery img{
+width:100%;
+height:100%;
+object-fit:cover
+}
+
+.arrow{
+position:absolute;
+top:50%;
+transform:translateY(-50%);
+width:38px;
+height:38px;
+border:0;
+border-radius:50%;
+background:rgba(255,255,255,.9);
+font-size:24px;
+z-index:2
+}
+
+.left{left:10px}
+.right{right:10px}
+
+.dots{
+position:absolute;
+bottom:10px;
+left:0;
+right:0;
+text-align:center
+}
+
+.dot{
+display:inline-block;
+width:7px;
+height:7px;
+border-radius:50%;
+background:#bbb;
+margin:3px
+}
+
+.dot.active{
+background:#111
 }
 
 .info{
-  padding:18px
+padding:15px
 }
 
 .info h3{
-  margin:0 0 8px;
-  font-size:17px
+margin:0 0 7px
 }
 
 .price{
-  font-weight:bold;
-  margin-bottom:15px
+font-weight:800
 }
 
-.buy{
-  width:100%;
-  border:0;
-  background:#111;
-  color:#fff;
-  padding:12px;
-  border-radius:3px;
-  font-weight:bold;
-  cursor:pointer
+.empty{
+grid-column:1/-1;
+text-align:center;
+color:#777;
+padding:50px
 }
 
-.about{
-  border-top:1px solid #ddd;
-  border-bottom:1px solid #ddd;
-  text-align:center
+.modal{
+display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.55);
+padding:18px;
+z-index:10;
+overflow:auto
 }
 
-.about p{
-  max-width:700px;
-  margin:15px auto;
-  color:#666;
-  line-height:1.7
+.box{
+max-width:520px;
+margin:30px auto;
+background:#fff;
+border-radius:18px;
+padding:24px
 }
 
-footer{
-  text-align:center;
-  padding:35px 20px;
-  color:#777;
-  font-size:13px
+.box h2{
+margin-top:0
 }
 
-.cart{
-  position:fixed;
-  right:18px;
-  bottom:18px;
-  background:#111;
-  color:#fff;
-  border:0;
-  border-radius:50px;
-  padding:15px 20px;
-  font-weight:bold;
-  cursor:pointer
+label{
+display:block;
+font-weight:700;
+margin:14px 0 6px
 }
 
-/* ADMIN */
-
-.admin-box{
-  margin-top:35px;
-  border-top:1px solid #ddd;
-  padding-top:25px
+input,textarea{
+width:100%;
+padding:12px;
+border:1px solid #ddd;
+border-radius:9px;
+font:inherit
 }
 
-.admin-toggle,
-.save-btn,
-.clear-btn{
-  border:0;
-  cursor:pointer;
-  padding:12px 16px;
-  border-radius:4px;
-  font-weight:bold
+textarea{
+min-height:90px
 }
 
-.admin-toggle{
-  background:#111;
-  color:#fff
+.preview{
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+margin-top:10px
 }
 
-.admin-panel{
-  margin-top:15px;
-  background:#f7f7f7;
-  border:1px solid #ddd;
-  border-radius:8px;
-  padding:20px;
-  max-width:650px
+.preview img{
+width:70px;
+height:70px;
+object-fit:cover;
+border-radius:8px
 }
 
-.admin-panel h3{
-  margin-bottom:15px
+.note{
+font-size:12px;
+color:#777;
+margin-top:8px
 }
 
-.admin-panel input,
-.admin-panel textarea{
-  display:block;
-  width:100%;
-  margin:10px 0;
-  padding:12px;
-  background:#fff;
-  border:1px solid #ccc;
-  color:#111;
-  border-radius:4px
+.status{
+font-size:13px;
+color:#666;
+margin-top:10px
 }
 
-.admin-panel textarea{
-  min-height:80px;
-  resize:vertical
+.actions{
+display:flex;
+gap:10px;
+margin-top:18px
 }
 
-.upload-label{
-  display:block;
-  margin:15px 0 6px;
-  font-size:12px;
-  font-weight:bold
+.actions button{
+flex:1;
+padding:13px;
+border:0;
+border-radius:9px;
+font-weight:700
 }
 
-.upload-label input{
-  margin-top:8px
+.save{
+background:#111;
+color:#fff
 }
 
-.admin-panel small{
-  display:block;
-  color:#777;
-  margin-bottom:15px
-}
-
-.save-btn{
-  background:#111;
-  color:#fff
-}
-
-.clear-btn{
-  background:#ddd;
-  color:#111;
-  margin-left:8px
-}
-
-.admin-note{
-  color:#777;
-  font-size:12px;
-  line-height:1.5;
-  margin-top:15px
-}
-
-.product-gallery{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  height:100%;
-  width:100%
-}
-
-.product-gallery img{
-  width:100%;
-  height:100%;
-  object-fit:cover
-}
-
-.product-gallery.one{
-  grid-template-columns:1fr
-}
-
-.product-gallery.three,
-.product-gallery.four{
-  grid-template-columns:repeat(2,1fr)
-}
-
-.product-gallery img{
-  min-height:0
-}
-
-.empty-products{
-  grid-column:1/-1;
-  text-align:center;
-  color:#777;
-  padding:45px 10px;
-  border:1px dashed #333
-}
-
-.product-gallery{
-  overflow:hidden
-}
-
-.product-gallery img{
-  display:block
-}
-
-.card .clear-btn{
-  cursor:pointer;
-  border:1px solid #ccc
-}
-
-@media(max-width:650px){
-
-  nav a{
-    margin-left:10px;
-    font-size:12px
-  }
-
-  .hero h1{
-    letter-spacing:-3px
-  }
-
-  .photo{
-    height:260px
-  }
-
+.cancel{
+background:#eee
 }
 </style>
 </head>
@@ -332,285 +228,511 @@ footer{
 <body>
 
 <header>
+<div class="logo">STREET 21</div>
 
-  <div class="logo">
-    STREET 21
-  </div>
-
-  <nav>
-    <a href="#shop">SHOP</a>
-    <a href="#about">NOSOTROS</a>
-    <a href="#contact">CONTACTO</a>
-  </nav>
-
+<button class="admin" id="openAdmin">
++ Agregar producto
+</button>
 </header>
 
-
-<main>
-
 <section class="hero">
-
-  <div>
-
-    <h1>
-      STREET<br>
-      21
-    </h1>
-
-    <p>
-      Streetwear seleccionado en Guatemala.
-      Essentials, BAPE, Hellstar, Sp5der,
-      Stüssy, Supreme y más.
-    </p>
-
-    <a class="btn" href="#shop">
-      VER COLECCIÓN
-    </a>
-
-  </div>
-
+<h1>STREET 21</h1>
+<p>Streetwear seleccionado. Exclusivo. Sin complicaciones.</p>
 </section>
 
+<section class="products" id="products"></section>
 
-<section id="shop">
+<div class="modal" id="modal">
 
-  <h2 class="title">
-    NEW DROP
-  </h2>
+<div class="box">
 
-  <p class="subtitle">
-    Piezas disponibles actualmente.
-  </p>
+<h2>Agregar producto</h2>
 
+<form id="productForm">
 
-  <div class="products" id="products"></div>
+<label>Nombre</label>
 
+<input
+id="name"
+required
+placeholder="Ej. Essentials Tee"
+>
 
-  <div class="admin-box">
+<label>Precio (Q)</label>
 
-    <button
-      class="admin-toggle"
-      onclick="toggleAdmin()">
-      ADMIN · AGREGAR PRODUCTO
-    </button>
+<input
+id="price"
+type="number"
+min="0"
+step="0.01"
+required
+placeholder="300"
+>
 
+<label>Descripción</label>
 
-    <div
-      id="adminPanel"
-      class="admin-panel"
-      hidden>
+<textarea
+id="desc"
+placeholder="Talla, color, detalles..."
+></textarea>
 
-      <h3>
-        Agregar producto
-      </h3>
+<label>Fotos del producto</label>
 
+<input
+id="photos"
+type="file"
+accept="image/*"
+multiple
+required
+>
 
-      <input
-        id="pName"
-        placeholder="Nombre del producto">
+<div class="preview" id="preview"></div>
 
+<div class="note">
+Puedes seleccionar varias fotos. Se comprimirán automáticamente.
+</div>
 
-      <input
-        id="pPrice"
-        placeholder="Precio (ej. Q350)">
+<div class="status" id="status"></div>
 
-
-      <textarea
-        id="pDesc"
-        placeholder="Descripción (opcional)">
-      </textarea>
-
-
-      <label class="upload-label">
-
-        FOTOS DEL PRODUCTO
-
-        <input
-          id="pPhotos"
-          type="file"
-          accept="image/*"
-          multiple>
-
-      </label>
-
-
-      <small>
-        Puedes seleccionar varias fotos directamente desde tu iPhone.
-      </small>
-
-
-      <button
-        class="save-btn"
-        onclick="addProduct()">
-        GUARDAR PRODUCTO
-      </button>
-
-
-      <button
-        class="clear-btn"
-        onclick="clearProducts()">
-        BORRAR PRODUCTOS GUARDADOS
-      </button>
-
-
-      <p class="admin-note">
-        Los productos de esta versión se guardan
-        en este navegador/dispositivo.
-        Para que las fotos aparezcan públicamente
-        para todos los clientes, después conectaremos
-        almacenamiento en la nube.
-      </p>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<section class="about" id="about">
-
-  <h2 class="title">
-    STREET 21
-  </h2>
-
-  <p>
-    Una tienda de streetwear enfocada en piezas
-    que combinan estilo, cultura urbana y exclusividad.
-    Nacimos en Guatemala para traer nuevos drops
-    y prendas seleccionadas.
-  </p>
-
-</section>
-
-
-<section id="contact">
-
-  <h2 class="title">
-    CONTACTO
-  </h2>
-
-  <p class="subtitle">
-    Para pedidos, tallas y disponibilidad escríbenos.
-  </p>
-
-  <a
-    class="btn"
-    href="https://instagram.com/street21gt"
-    target="_blank">
-
-    INSTAGRAM @STREET21GT
-
-  </a>
-
-</section>
-
-</main>
-
+<div class="actions">
 
 <button
-  class="cart"
-  onclick="order('Quiero hacer un pedido')">
-
-  PEDIR
-
+type="button"
+class="cancel"
+id="close"
+>
+Cancelar
 </button>
 
+<button
+type="submit"
+class="save"
+id="save"
+>
+Guardar producto
+</button>
 
-<footer>
-  © 2026 STREET 21 · GUATEMALA
-</footer>
+</div>
 
+</form>
+
+</div>
+</div>
 
 <script>
 
-const STORAGE_KEY = "street21_products";
+const modal=document.getElementById("modal");
+const form=document.getElementById("productForm");
+const photos=document.getElementById("photos");
+const preview=document.getElementById("preview");
+const products=document.getElementById("products");
+const status=document.getElementById("status");
+const save=document.getElementById("save");
 
 
 function getProducts(){
 
-  try{
+try{
 
-    return JSON.parse(
-      localStorage.getItem(STORAGE_KEY)
-    ) || [];
+return JSON.parse(
+localStorage.getItem("street21_products") || "[]"
+);
 
-  }catch(e){
+}catch(e){
 
-    return [];
+return [];
 
-  }
+}
 
 }
 
 
-function saveProducts(products){
+function saveProducts(list){
 
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(products)
-  );
-
-}
-
-
-function toggleAdmin(){
-
-  const panel =
-    document.getElementById("adminPanel");
-
-  panel.hidden = !panel.hidden;
+localStorage.setItem(
+"street21_products",
+JSON.stringify(list)
+);
 
 }
 
 
-function renderProducts(){
+function compressImage(file){
 
-  const container =
-    document.getElementById("products");
+return new Promise((resolve,reject)=>{
 
-  const products =
-    getProducts();
+const reader=new FileReader();
+
+reader.onload=function(){
+
+const image=new Image();
+
+image.onload=function(){
+
+let width=image.width;
+let height=image.height;
+
+const max=1200;
+
+if(width>max || height>max){
+
+const ratio=Math.min(
+max/width,
+max/height
+);
+
+width=Math.round(width*ratio);
+height=Math.round(height*ratio);
+
+}
+
+const canvas=document.createElement("canvas");
+
+canvas.width=width;
+canvas.height=height;
+
+const ctx=canvas.getContext("2d");
+
+ctx.drawImage(
+image,
+0,
+0,
+width,
+height
+);
+
+resolve(
+canvas.toDataURL(
+"image/jpeg",
+0.72
+)
+);
+
+};
+
+image.onerror=reject;
+
+image.src=reader.result;
+
+};
+
+reader.onerror=reject;
+
+reader.readAsDataURL(file);
+
+});
+
+}
 
 
-  if(!products.length){
+function render(){
 
-    container.innerHTML =
-      '<div class="empty-products">' +
-      'Todavía no hay productos agregados.' +
-      '</div>';
+const list=getProducts();
 
-    return;
+products.innerHTML="";
 
-  }
+if(!list.length){
 
+products.innerHTML=
+'<div class="empty">Todavía no hay productos. Agrega el primero arriba. 🔥</div>';
 
-  container.innerHTML =
-    products.map((p,index)=>{
+return;
 
-      const galleryClass =
-        p.photos.length === 1
-        ? "one"
-        : (p.photos.length >= 3
-          ? "three"
-          : "");
+}
 
 
-      const photos =
-        p.photos.map(src => {
+list.forEach(function(product){
 
-          return `
-            <img
-              src="${src}"
-              alt="${escapeHtml(p.name)}">
-          `;
+const card=document.createElement("article");
 
-        }).join("");
+card.className="card";
 
 
-      return `
+const gallery=document.createElement("div");
 
-        <article class="card">
+gallery.className="gallery";
 
-          <div class="photo">
-```
+
+const image=document.createElement("img");
+
+image.src=product.images[0];
+
+gallery.appendChild(image);
+
+
+let current=0;
+
+
+if(product.images.length>1){
+
+const left=document.createElement("button");
+
+left.className="arrow left";
+
+left.textContent="‹";
+
+
+const right=document.createElement("button");
+
+right.className="arrow right";
+
+right.textContent="›";
+
+
+const dots=document.createElement("div");
+
+dots.className="dots";
+
+
+product.images.forEach(function(){
+
+const dot=document.createElement("span");
+
+dot.className="dot";
+
+dots.appendChild(dot);
+
+});
+
+
+function update(){
+
+image.src=product.images[current];
+
+Array.from(dots.children).forEach(
+function(dot,index){
+
+dot.classList.toggle(
+"active",
+index===current
+);
+
+});
+
+}
+
+
+left.onclick=function(){
+
+current=
+(current-1+product.images.length)
+%product.images.length;
+
+update();
+
+};
+
+
+right.onclick=function(){
+
+current=
+(current+1)
+%product.images.length;
+
+update();
+
+};
+
+
+gallery.appendChild(left);
+
+gallery.appendChild(right);
+
+gallery.appendChild(dots);
+
+update();
+
+}
+
+
+const info=document.createElement("div");
+
+info.className="info";
+
+
+const title=document.createElement("h3");
+
+title.textContent=product.name;
+
+
+const price=document.createElement("div");
+
+price.className="price";
+
+price.textContent=
+"Q "+
+Number(product.price)
+.toLocaleString("es-GT");
+
+
+const description=document.createElement("p");
+
+description.textContent=
+product.desc || "";
+
+
+info.appendChild(title);
+
+info.appendChild(price);
+
+info.appendChild(description);
+
+
+card.appendChild(gallery);
+
+card.appendChild(info);
+
+products.appendChild(card);
+
+});
+
+}
+
+
+document.getElementById("openAdmin").onclick=function(){
+
+modal.style.display="block";
+
+status.textContent="";
+
+};
+
+
+document.getElementById("close").onclick=function(){
+
+modal.style.display="none";
+
+};
+
+
+modal.onclick=function(event){
+
+if(event.target===modal){
+
+modal.style.display="none";
+
+}
+
+};
+
+
+photos.onchange=function(){
+
+preview.innerHTML="";
+
+Array.from(photos.files).forEach(function(file){
+
+const reader=new FileReader();
+
+reader.onload=function(event){
+
+const img=document.createElement("img");
+
+img.src=event.target.result;
+
+preview.appendChild(img);
+
+};
+
+reader.readAsDataURL(file);
+
+});
+
+};
+
+
+form.onsubmit=async function(event){
+
+event.preventDefault();
+
+save.disabled=true;
+
+status.textContent=
+"Comprimiendo fotos...";
+
+
+try{
+
+const files=
+Array.from(photos.files);
+
+const images=[];
+
+
+for(const file of files){
+
+const compressed=
+await compressImage(file);
+
+images.push(compressed);
+
+}
+
+
+const product={
+
+name:
+document.getElementById("name")
+.value.trim(),
+
+price:
+document.getElementById("price")
+.value,
+
+desc:
+document.getElementById("desc")
+.value.trim(),
+
+images:images
+
+};
+
+
+const list=getProducts();
+
+list.push(product);
+
+
+const test=
+JSON.stringify(list);
+
+
+if(test.length>4500000){
+
+throw new Error("storage");
+
+}
+
+
+saveProducts(list);
+
+render();
+
+form.reset();
+
+preview.innerHTML="";
+
+status.textContent="";
+
+modal.style.display="none";
+
+
+}catch(error){
+
+status.textContent=
+"No se pudo guardar. Prueba con menos fotos.";
+
+}
+
+
+save.disabled=false;
+
+};
+
+
+render();
+
+</script>
+
+</body>
+</html>
