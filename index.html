@@ -838,7 +838,6 @@ document
     }
   );
 
-
 /* ENVIAR PEDIDO A WHATSAPP */
 
 document.getElementById(
@@ -849,32 +848,26 @@ document.getElementById(
 
     event.preventDefault();
 
-
     if(!selectedProduct)
       return;
-
 
     const payment =
       document.querySelector(
         'input[name="payment"]:checked'
       ).value;
 
-
     const transfer =
       payment === "transfer";
-
 
     const total =
       transfer
         ? "285"
         : "300";
 
-
     const paymentText =
       transfer
         ? "Depósito / transferencia"
         : "Pago contra entrega";
-
 
     const message = [
 
@@ -909,6 +902,15 @@ document.getElementById(
     ].join("\n");
 
 
+    /* CERRAR EL CUADRO DE PEDIDO */
+
+    document.getElementById(
+      "buyModal"
+    ).style.display = "none";
+
+
+    /* ABRIR WHATSAPP */
+
     window.location.href =
       "https://wa.me/" +
       WHATSAPP_NUMBER +
@@ -919,13 +921,3 @@ document.getElementById(
 
   }
 );
-
-
-/* INICIAR */
-
-loadProducts();
-
-</script>
-
-</body>
-</html>
