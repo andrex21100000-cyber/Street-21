@@ -1,142 +1,377 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Street 21</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>STREET 21 · Admin</title>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#fff;color:#111;font-family:Arial,sans-serif}
-header{padding:22px 6%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eee}
-.logo{font-weight:900;letter-spacing:2px;font-size:24px}
-.hero{padding:55px 6% 30px}
-.hero h1{font-size:clamp(38px,8vw,78px);margin:0 0 10px;letter-spacing:-3px}
-.hero p{color:#666}
-.products{padding:20px 6% 70px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px}
-.card{border:1px solid #eee;border-radius:14px;overflow:hidden;background:#fff}
-.photo{aspect-ratio:1/1;background:#f3f3f3;display:flex;align-items:center;justify-content:center;color:#999}
-.photo img{width:100%;height:100%;object-fit:cover}
-.info{padding:15px}.info h3{margin:0 0 7px}.price{font-weight:800}
-.buy{width:100%;margin-top:12px;background:#111;color:#fff;border:0;border-radius:9px;padding:12px 15px;font-weight:700}
-.buy:disabled{background:#aaa;cursor:not-allowed}
-.status{display:inline-block;margin-top:10px;font-size:12px;font-weight:800;letter-spacing:.5px}
-.sold{color:#b00020}.available{color:#188038}
-.empty{grid-column:1/-1;text-align:center;color:#777;padding:50px}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);padding:20px;z-index:10;overflow:auto}
-.box{max-width:520px;margin:40px auto;background:#fff;border-radius:18px;padding:24px}
-.box h2{margin-top:0}
-label{display:block;font-weight:700;margin:14px 0 6px}
-input,textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:9px;font:inherit}
+body{margin:0;font-family:Arial,sans-serif;background:#f5f5f5;color:#111}
+header{background:#111;color:#fff;padding:22px}
+.wrap{max-width:900px;margin:auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:20px;margin-bottom:18px;box-shadow:0 2px 10px #0001}
+input,textarea,button{font:inherit}
+input,textarea{width:100%;padding:12px;border:1px solid #ccc;border-radius:9px;margin:6px 0 14px}
 textarea{min-height:90px}
-.actions{display:flex;gap:10px;margin-top:18px}.actions button{flex:1;padding:13px;border:0;border-radius:9px;font-weight:700}
-.cancel{background:#eee}.save{background:#111;color:#fff}
-.payment-option{border:1px solid #ddd;border-radius:10px;padding:13px;margin:8px 0;cursor:pointer}
-.payment-option input{width:auto;margin-right:8px}
-.bank-box{display:none;background:#f5f5f5;border-radius:10px;padding:14px;margin-top:10px;font-size:14px}
+button{border:0;border-radius:9px;padding:12px 16px;cursor:pointer}
+.primary{background:#111;color:#fff}
+.gray{background:#e9e9e9}
+.danger{background:#c62828;color:#fff}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row button{flex:1}
+.msg{font-weight:700;margin:10px 0}
+.error{color:#b00020}
+.success{color:#18794e}
+.product{border:1px solid #ddd;border-radius:12px;padding:14px;margin:12px 0}
+.thumb{width:90px;height:90px;object-fit:cover;border-radius:8px;margin:4px}
+.badge{display:inline-block;padding:5px 8px;border-radius:999px;background:#eee;font-size:12px;font-weight:700}
 </style>
 </head>
+
 <body>
-<header><div class="logo">STREET 21</div></header>
-<section class="hero">
-<h1>STREET 21</h1>
-<p>Streetwear seleccionado. Exclusivo. Sin complicaciones.</p>
+
+<header>
+<div class="wrap">
+<h1>STREET 21 · ADMIN</h1>
+<div style="color:#bbb">Panel privado</div>
+</div>
+</header>
+
+<div class="wrap">
+
+<section class="card">
+<h2>Agregar producto</h2>
+
+<input id="name" placeholder="Nombre del producto">
+
+<input id="price" type="number" min="0" placeholder="Precio (Q)">
+
+<textarea id="description" placeholder="Descripción"></textarea>
+
+<input id="photos" type="file" accept="image/*" multiple>
+
+<div class="row">
+<button class="primary" id="addBtn">Agregar producto</button>
+<button class="gray" id="refreshBtn">Actualizar lista</button>
+</div>
+
+<div id="msg" class="msg"></div>
 </section>
-<section class="products" id="products"><div class="empty">Cargando productos...</div></section>
 
-<div class="modal" id="buyModal">
-<div class="box">
-<h2>Comprar producto</h2>
-<div id="buyProductInfo"></div>
-<form id="buyForm">
-<label>Nombre completo</label>
-<input id="buyerName" required placeholder="Tu nombre">
-<label>Teléfono</label>
-<input id="buyerPhone" type="tel" required placeholder="Tu número">
-<label>Dirección de entrega</label>
-<textarea id="buyerAddress" required placeholder="Dirección donde recibirás tu pedido"></textarea>
-<label>Forma de pago</label>
-<label class="payment-option"><input type="radio" name="payment" value="cod" required> Pago contra entrega — Q300</label>
-<label class="payment-option"><input type="radio" name="payment" value="transfer"> Depósito / transferencia — Q285</label>
-<div class="bank-box" id="bankBox">
-<strong>Datos para depósito / transferencia</strong><br><br>
-Banco Industrial (BI)<br>
-Número de cuenta: <strong>3674276</strong><br>
-Tipo de cuenta: <strong>Ahorro</strong><br>
-Nombre del titular: <strong>Evelyn Pérez</strong><br><br>
-Después de realizar el depósito, guarda tu comprobante.
-</div>
-<div class="actions">
-<button type="button" class="cancel" id="closeBuy">Cancelar</button>
-<button type="submit" class="save">Enviar pedido por WhatsApp</button>
-</div>
-</form>
-</div>
+<section class="card">
+<h2>Productos</h2>
+<div id="products">Cargando...</div>
+</section>
+
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const SUPABASE_URL = "https://entphlnycmrgulvvyign.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "PEGA_AQUI_TU_SB_PUBLISHABLE_KEY";
-const db = supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-const WHATSAPP_NUMBER = "50248501010";
-const productsEl = document.getElementById("products");
-const buyModal = document.getElementById("buyModal");
-const buyForm = document.getElementById("buyForm");
-const bankBox = document.getElementById("bankBox");
-let selectedProduct = null;
 
-async function render(){
-  const {data,error}=await db.from("products").select("*").order("created_at",{ascending:false});
-  productsEl.innerHTML="";
-  if(error){ productsEl.innerHTML='<div class="empty">No se pudieron cargar los productos.</div>'; console.error(error); return; }
-  if(!data || !data.length){ productsEl.innerHTML='<div class="empty">Próximamente nuevos productos 🔥</div>'; return; }
+const API="https://wifkqfgmijvqxevkwssx.supabase.co/functions/v1/street21-admin";
 
-  data.forEach(p=>{
-    const card=document.createElement("article"); card.className="card";
-    const photo=document.createElement("div"); photo.className="photo";
-    const imgs=Array.isArray(p.images)?p.images:[];
-    if(imgs[0]){ const img=document.createElement("img"); img.src=imgs[0]; img.alt=p.name||"Producto"; photo.appendChild(img); }
-    else photo.textContent="Sin foto";
+const KEY="9pvHKCBkura9CY0KY3ctNMophJuB3O6pua2_xkpU4c8";
 
-    const info=document.createElement("div"); info.className="info";
-    const title=document.createElement("h3"); title.textContent=p.name||"Producto";
-    const price=document.createElement("div"); price.className="price"; price.textContent="Q "+Number(p.price||0).toLocaleString("es-GT");
-    const desc=document.createElement("p"); desc.textContent=p.description||"";
-    const status=document.createElement("div"); status.className="status";
-    const buy=document.createElement("button"); buy.type="button"; buy.className="buy";
+let products=[];
 
-    if(p.sold_out){
-      status.classList.add("sold"); status.textContent="AGOTADO";
-      buy.textContent="Agotado"; buy.disabled=true;
-    }else{
-      status.classList.add("available"); status.textContent="DISPONIBLE";
-      buy.textContent="Comprar";
-      buy.addEventListener("click",()=>{
-        selectedProduct=p;
-        document.getElementById("buyProductInfo").innerHTML="<strong>"+escapeHtml(p.name)+"</strong><br>Precio publicado: Q "+Number(p.price||0).toLocaleString("es-GT");
-        buyModal.style.display="block";
-      });
-    }
-    info.append(title,price,desc,status,buy); card.append(photo,info); productsEl.appendChild(card);
-  });
-}
-function escapeHtml(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
-document.getElementById("closeBuy").onclick=()=>buyModal.style.display="none";
-buyModal.addEventListener("click",e=>{if(e.target===buyModal) buyModal.style.display="none";});
-document.querySelectorAll('input[name="payment"]').forEach(r=>r.addEventListener("change",()=>bankBox.style.display=r.value==="transfer"?"block":"none"));
-buyForm.addEventListener("submit",e=>{
- e.preventDefault(); if(!selectedProduct)return;
- const payment=document.querySelector('input[name="payment"]:checked').value;
- const paymentText=payment==="transfer"?"Depósito / transferencia":"Pago contra entrega";
- const total=payment==="transfer"?"285":"300";
- const message=["🔥 NUEVO PEDIDO - STREET 21","",
- "Producto: "+selectedProduct.name,"Total: Q"+total,"Forma de pago: "+paymentText,
- "Nombre: "+document.getElementById("buyerName").value.trim(),
- "Teléfono: "+document.getElementById("buyerPhone").value.trim(),
- "Dirección: "+document.getElementById("buyerAddress").value.trim()].join("\n");
- window.location.href="https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent(message);
+const $=id=>document.getElementById(id);
+
+async function call(action,data={}){
+
+const r=await fetch(API,{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+key:KEY,
+action,
+...data
+})
 });
-render();
+
+const t=await r.text();
+
+let j;
+
+try{
+j=JSON.parse(t)
+}catch{
+j={error:t}
+}
+
+if(!r.ok)
+throw new Error(j.error||("HTTP "+r.status));
+
+return j;
+}
+
+async function load(){
+
+try{
+
+const d=await call("list");
+
+render(Array.isArray(d)?d:[]);
+
+}catch(e){
+
+$("products").innerHTML=
+'<div class="error">'+esc(e.message)+'</div>';
+
+}
+
+}
+
+function render(list){
+
+products=list;
+
+if(!list.length){
+
+$("products").innerHTML=
+"<p>No hay productos todavía.</p>";
+
+return;
+}
+
+$("products").innerHTML=list.map(p=>
+
+'<div class="product">'+
+
+'<h3>'+esc(p.name||"Sin nombre")+'</h3>'+
+
+'<p><b>Q'+esc(p.price??"")+'</b></p>'+
+
+'<p>'+esc(p.description||"")+'</p>'+
+
+'<div>'+
+(p.images||[]).map(u=>
+'<img class="thumb" src="'+esc(u)+'">'
+).join("")+
+'</div>'+
+
+'<p><span class="badge">'+
+(p.sold_out?"AGOTADO":"DISPONIBLE")+
+'</span></p>'+
+
+'<div class="row">'+
+
+'<button class="gray" onclick="toggle(\''+
+esc(p.id)+
+'\','+
+(!p.sold_out)+
+')">'+
+(p.sold_out?"Poner disponible":"Marcar agotado")+
+'</button>'+
+
+'<button class="gray" onclick="edit(\''+
+esc(p.id)+
+'\')">Editar</button>'+
+
+'<button class="danger" onclick="del(\''+
+esc(p.id)+
+'\')">Eliminar</button>'+
+
+'</div>'+
+
+'</div>'
+
+).join("");
+
+}
+
+window.toggle=async(id,s)=>{
+
+try{
+
+await call("soldout",{
+id,
+sold_out:s
+});
+
+load();
+
+}catch(e){
+
+alert(e.message);
+
+}
+
+};
+
+window.del=async id=>{
+
+if(!confirm("¿Eliminar este producto?"))
+return;
+
+try{
+
+await call("delete",{id});
+
+load();
+
+}catch(e){
+
+alert(e.message);
+
+}
+
+};
+
+window.edit=id=>{
+
+const p=products.find(
+x=>String(x.id)===String(id)
+);
+
+if(!p)return;
+
+$("name").value=p.name||"";
+$("price").value=p.price??"";
+$("description").value=p.description||"";
+
+$("addBtn").dataset.id=p.id;
+
+$("addBtn").textContent="Guardar cambios";
+
+scrollTo({
+top:0,
+behavior:"smooth"
+});
+
+};
+
+$("addBtn").onclick=async()=>{
+
+const id=$("addBtn").dataset.id;
+
+const name=$("name").value.trim();
+
+const price=$("price").value;
+
+const description=$("description").value.trim();
+
+const fs=[...$("photos").files];
+
+if(!name||!price)
+return msg("Pon nombre y precio.");
+
+if(fs.length>4)
+return msg("Máximo 4 fotos.");
+
+$("addBtn").disabled=true;
+
+msg(
+id?"Guardando...":"Agregando...",
+false
+);
+
+try{
+
+const images=fs.length
+?await Promise.all(fs.map(read))
+:null;
+
+if(id){
+
+await call("update",{
+id,
+name,
+price:Number(price),
+description,
+...(images?{images}:{})
+});
+
+}else{
+
+await call("add",{
+name,
+price:Number(price),
+description,
+images:images||[]
+});
+
+}
+
+$("name").value="";
+$("price").value="";
+$("description").value="";
+$("photos").value="";
+
+delete $("addBtn").dataset.id;
+
+$("addBtn").textContent="Agregar producto";
+
+msg("Listo ✅",false);
+
+load();
+
+}catch(e){
+
+msg(e.message);
+
+}finally{
+
+$("addBtn").disabled=false;
+
+}
+
+};
+
+$("refreshBtn").onclick=load;
+
+function read(f){
+
+return new Promise((ok,no)=>{
+
+const r=new FileReader();
+
+r.onload=()=>ok({
+
+name:f.name,
+
+type:f.type,
+
+data:String(r.result).split(",")[1]
+
+});
+
+r.onerror=no;
+
+r.readAsDataURL(f);
+
+});
+
+}
+
+function msg(t,err=true){
+
+$("msg").textContent=t;
+
+$("msg").className=
+"msg "+(err?"error":"success");
+
+}
+
+function esc(s){
+
+return String(s).replace(
+/[&<>"']/g,
+c=>({
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+'"':"&quot;",
+"'":"&#39;"
+}[c])
+);
+
+}
+
+load();
+
 </script>
+
 </body>
 </html>
