@@ -4,257 +4,374 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>STREET 21 · Admin</title>
+
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#f5f5f5;color:#111}
 header{background:#111;color:#fff;padding:22px}
-.wrap{max-width:900px;margin:0 auto;padding:20px}
-.card{background:#fff;border-radius:14px;padding:20px;margin-bottom:18px;box-shadow:0 2px 10px #00000012}
+.wrap{max-width:900px;margin:auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:20px;margin-bottom:18px;box-shadow:0 2px 10px #0001}
 input,textarea,button{font:inherit}
 input,textarea{width:100%;padding:12px;border:1px solid #ccc;border-radius:9px;margin:6px 0 14px}
-textarea{min-height:90px;resize:vertical}
+textarea{min-height:90px}
 button{border:0;border-radius:9px;padding:12px 16px;cursor:pointer}
 .primary{background:#111;color:#fff}
 .gray{background:#e9e9e9}
 .danger{background:#c62828;color:#fff}
-.ok{background:#18794e;color:#fff}
 .row{display:flex;gap:10px;flex-wrap:wrap}
-.row>*{flex:1}
+.row button{flex:1}
 .msg{font-weight:700;margin:10px 0}
 .error{color:#b00020}
 .success{color:#18794e}
 .product{border:1px solid #ddd;border-radius:12px;padding:14px;margin:12px 0}
 .thumb{width:90px;height:90px;object-fit:cover;border-radius:8px;margin:4px}
-.hidden{display:none}
-.small{font-size:13px;color:#666}
+.badge{display:inline-block;padding:5px 8px;border-radius:999px;background:#eee;font-size:12px;font-weight:700}
 </style>
 </head>
+
 <body>
-<header><div class="wrap"><h1>STREET 21 · ADMIN</h1><div class="small" style="color:#bbb">Panel privado</div></div></header>
+
+<header>
+<div class="wrap">
+<h1>STREET 21 · ADMIN</h1>
+<div style="color:#bbb">Panel privado</div>
+</div>
+</header>
 
 <div class="wrap">
 
-<section id="login" class="card">
-<h2>Acceso</h2>
-<p>Escribe tu código de administrador.</p>
-<input id="code" type="password" placeholder="Código de acceso">
-<button class="primary" id="enterBtn">Entrar</button>
-<div id="loginMsg" class="msg"></div>
-</section>
-
-<section id="panel" class="hidden">
-<div class="card">
+<section class="card">
 <h2>Agregar producto</h2>
-<label>Nombre</label>
-<input id="name" placeholder="Ej. Essentials Black T-Shirt">
 
-<label>Precio (Q)</label>
-<input id="price" type="number" min="0" step="1" placeholder="300">
+<input id="name" placeholder="Nombre del producto">
 
-<label>Descripción</label>
-<textarea id="description" placeholder="Descripción del producto"></textarea>
+<input id="price" type="number" min="0" placeholder="Precio (Q)">
 
-<label>Fotos (máximo 4)</label>
+<textarea id="description" placeholder="Descripción"></textarea>
+
 <input id="photos" type="file" accept="image/*" multiple>
 
 <div class="row">
 <button class="primary" id="addBtn">Agregar producto</button>
 <button class="gray" id="refreshBtn">Actualizar lista</button>
 </div>
-<div id="formMsg" class="msg"></div>
-</div>
 
-<div class="card">
+<div id="msg" class="msg"></div>
+</section>
+
+<section class="card">
 <h2>Productos</h2>
 <div id="products">Cargando...</div>
-</div>
 </section>
+
 </div>
 
 <script>
-const FUNCTION_URL = "https://entphlnycmrgulvvyign.supabase.co/functions/v1/street21-admin";
-const PUBLISHABLE_KEY = "sb_publishable_3t7TJcHlRF9gaI8791GtJw_VikOVDCe";
-let adminCode = "";
 
-const $ = id => document.getElementById(id);
+const API="https://wifkqfgmijvqxevkwssx.supabase.co/functions/v1/street21-admin";
 
-async function api(action, extra = {}) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 15000);
+const KEY="9pvHKCBkura9CY0KY3ctNMophJuB3O6pua2_xkpU4c8";
 
-  try {
-    const res = await fetch(FUNCTION_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "apikey": PUBLISHABLE_KEY
-      },
-      body: JSON.stringify({ code: adminCode, action, ...extra }),
-      signal: controller.signal
-    });
+let products=[];
 
-    const text = await res.text();
-    let data;
-    try { data = JSON.parse(text); } catch { data = {error:text}; }
+const $=id=>document.getElementById(id);
 
-    if (!res.ok) throw new Error(data.error || ("Error HTTP " + res.status));
-    return data;
-  } finally {
-    clearTimeout(timer);
-  }
+async function call(action,data={}){
+
+const r=await fetch(API,{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+key:KEY,
+action,
+...data
+})
+});
+
+const t=await r.text();
+
+let j;
+
+try{
+j=JSON.parse(t)
+}catch{
+j={error:t}
 }
 
-$("enterBtn").onclick = async () => {
-  const code = $("code").value.trim();
-  if (!code) {
-    $("loginMsg").textContent = "Escribe el código.";
-    $("loginMsg").className = "msg error";
-    return;
-  }
+if(!r.ok)
+throw new Error(j.error||("HTTP "+r.status));
 
-  adminCode = code;
-  $("loginMsg").textContent = "Conectando...";
-  $("loginMsg").className = "msg";
+return j;
+}
 
-  try {
-    await api("list");
-    $("login").classList.add("hidden");
-    $("panel").classList.remove("hidden");
-    $("loginMsg").textContent = "";
-    await loadProducts();
-  } catch (e) {
-    adminCode = "";
-    $("loginMsg").textContent =
-      e.name === "AbortError" ? "La conexión tardó demasiado." : e.message;
-    $("loginMsg").className = "msg error";
-  }
+async function load(){
+
+try{
+
+const d=await call("list");
+
+render(Array.isArray(d)?d:[]);
+
+}catch(e){
+
+$("products").innerHTML=
+'<div class="error">'+esc(e.message)+'</div>';
+
+}
+
+}
+
+function render(list){
+
+products=list;
+
+if(!list.length){
+
+$("products").innerHTML=
+"<p>No hay productos todavía.</p>";
+
+return;
+}
+
+$("products").innerHTML=list.map(p=>
+
+'<div class="product">'+
+
+'<h3>'+esc(p.name||"Sin nombre")+'</h3>'+
+
+'<p><b>Q'+esc(p.price??"")+'</b></p>'+
+
+'<p>'+esc(p.description||"")+'</p>'+
+
+'<div>'+
+(p.images||[]).map(u=>
+'<img class="thumb" src="'+esc(u)+'">'
+).join("")+
+'</div>'+
+
+'<p><span class="badge">'+
+(p.sold_out?"AGOTADO":"DISPONIBLE")+
+'</span></p>'+
+
+'<div class="row">'+
+
+'<button class="gray" onclick="toggle(\''+
+esc(p.id)+
+'\','+
+(!p.sold_out)+
+')">'+
+(p.sold_out?"Poner disponible":"Marcar agotado")+
+'</button>'+
+
+'<button class="gray" onclick="edit(\''+
+esc(p.id)+
+'\')">Editar</button>'+
+
+'<button class="danger" onclick="del(\''+
+esc(p.id)+
+'\')">Eliminar</button>'+
+
+'</div>'+
+
+'</div>'
+
+).join("");
+
+}
+
+window.toggle=async(id,s)=>{
+
+try{
+
+await call("soldout",{
+id,
+sold_out:s
+});
+
+load();
+
+}catch(e){
+
+alert(e.message);
+
+}
+
 };
 
-async function loadProducts() {
-  $("products").textContent = "Cargando...";
-  try {
-    const data = await api("list");
-    renderProducts(Array.isArray(data) ? data : []);
-  } catch (e) {
-    $("products").innerHTML =
-      '<div class="error">No se pudo cargar: ' + escapeHtml(e.message) + '</div>';
-  }
+window.del=async id=>{
+
+if(!confirm("¿Eliminar este producto?"))
+return;
+
+try{
+
+await call("delete",{id});
+
+load();
+
+}catch(e){
+
+alert(e.message);
+
 }
 
-function renderProducts(list) {
-  if (!list.length) {
-    $("products").innerHTML = "<p>No hay productos todavía.</p>";
-    return;
-  }
-
-  $("products").innerHTML = list.map(p => {
-    const imgs = Array.isArray(p.images) ? p.images : [];
-    return `
-      <div class="product">
-        <h3>${escapeHtml(p.name || "Sin nombre")}</h3>
-        <p><b>Q${escapeHtml(String(p.price ?? ""))}</b></p>
-        <p>${escapeHtml(p.description || "")}</p>
-        <div>${imgs.map(u => `<img class="thumb" src="${escapeAttr(u)}">`).join("")}</div>
-        <p><b>${p.sold_out ? "AGOTADO" : "DISPONIBLE"}</b></p>
-        <div class="row">
-          <button class="${p.sold_out ? "ok" : "gray"}"
-            onclick="toggleSold('${escapeAttr(p.id)}', ${!p.sold_out})">
-            ${p.sold_out ? "Poner disponible" : "Marcar agotado"}
-          </button>
-          <button class="danger" onclick="removeProduct('${escapeAttr(p.id)}')">Eliminar</button>
-        </div>
-      </div>`;
-  }).join("");
-}
-
-window.toggleSold = async (id, sold_out) => {
-  try {
-    await api("soldout", {id, sold_out});
-    await loadProducts();
-  } catch(e) {
-    alert(e.message);
-  }
 };
 
-window.removeProduct = async (id) => {
-  if (!confirm("¿Eliminar este producto?")) return;
-  try {
-    await api("delete", {id});
-    await loadProducts();
-  } catch(e) {
-    alert(e.message);
-  }
+window.edit=id=>{
+
+const p=products.find(
+x=>String(x.id)===String(id)
+);
+
+if(!p)return;
+
+$("name").value=p.name||"";
+$("price").value=p.price??"";
+$("description").value=p.description||"";
+
+$("addBtn").dataset.id=p.id;
+
+$("addBtn").textContent="Guardar cambios";
+
+scrollTo({
+top:0,
+behavior:"smooth"
+});
+
 };
 
-$("addBtn").onclick = async () => {
-  const name = $("name").value.trim();
-  const price = $("price").value;
-  const description = $("description").value.trim();
-  const files = [...$("photos").files];
+$("addBtn").onclick=async()=>{
 
-  if (!name || !price) {
-    $("formMsg").textContent = "Pon nombre y precio.";
-    $("formMsg").className = "msg error";
-    return;
-  }
+const id=$("addBtn").dataset.id;
 
-  if (files.length > 4) {
-    $("formMsg").textContent = "Máximo 4 fotos.";
-    $("formMsg").className = "msg error";
-    return;
-  }
+const name=$("name").value.trim();
 
-  $("addBtn").disabled = true;
-  $("formMsg").textContent = "Subiendo producto...";
-  $("formMsg").className = "msg";
+const price=$("price").value;
 
-  try {
-    const images = await Promise.all(files.map(fileToBase64));
-    await api("add", {
-      name,
-      price: Number(price),
-      description,
-      images
-    });
+const description=$("description").value.trim();
 
-    $("name").value = "";
-    $("price").value = "";
-    $("description").value = "";
-    $("photos").value = "";
-    $("formMsg").textContent = "Producto agregado correctamente.";
-    $("formMsg").className = "msg success";
-    await loadProducts();
-  } catch(e) {
-    $("formMsg").textContent = e.name === "AbortError"
-      ? "La conexión tardó demasiado."
-      : e.message;
-    $("formMsg").className = "msg error";
-  } finally {
-    $("addBtn").disabled = false;
-  }
+const fs=[...$("photos").files];
+
+if(!name||!price)
+return msg("Pon nombre y precio.");
+
+if(fs.length>4)
+return msg("Máximo 4 fotos.");
+
+$("addBtn").disabled=true;
+
+msg(
+id?"Guardando...":"Agregando...",
+false
+);
+
+try{
+
+const images=fs.length
+?await Promise.all(fs.map(read))
+:null;
+
+if(id){
+
+await call("update",{
+id,
+name,
+price:Number(price),
+description,
+...(images?{images}:{})
+});
+
+}else{
+
+await call("add",{
+name,
+price:Number(price),
+description,
+images:images||[]
+});
+
+}
+
+$("name").value="";
+$("price").value="";
+$("description").value="";
+$("photos").value="";
+
+delete $("addBtn").dataset.id;
+
+$("addBtn").textContent="Agregar producto";
+
+msg("Listo ✅",false);
+
+load();
+
+}catch(e){
+
+msg(e.message);
+
+}finally{
+
+$("addBtn").disabled=false;
+
+}
+
 };
 
-$("refreshBtn").onclick = loadProducts;
+$("refreshBtn").onclick=load;
 
-function fileToBase64(file) {
-  return new Promise((resolve,reject) => {
-    const r = new FileReader();
-    r.onload = () => resolve({
-      name:file.name,
-      type:file.type,
-      data:String(r.result).split(",")[1]
-    });
-    r.onerror = reject;
-    r.readAsDataURL(file);
-  });
+function read(f){
+
+return new Promise((ok,no)=>{
+
+const r=new FileReader();
+
+r.onload=()=>ok({
+
+name:f.name,
+
+type:f.type,
+
+data:String(r.result).split(",")[1]
+
+});
+
+r.onerror=no;
+
+r.readAsDataURL(f);
+
+});
+
 }
 
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, c => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  }[c]));
+function msg(t,err=true){
+
+$("msg").textContent=t;
+
+$("msg").className=
+"msg "+(err?"error":"success");
+
 }
-function escapeAttr(s) { return escapeHtml(s); }
+
+function esc(s){
+
+return String(s).replace(
+/[&<>"']/g,
+c=>({
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+'"':"&quot;",
+"'":"&#39;"
+}[c])
+);
+
+}
+
+load();
+
 </script>
+
 </body>
 </html>
