@@ -24,18 +24,154 @@ textarea{min-height:90px}button{border:0;border-radius:9px;padding:12px 16px;cur
 <div id="msg" class="msg"></div></section>
 <section class="card"><h2>Productos</h2><div id="products">Cargando...</div></section></div>
 <script>
-const API="https://wifkqfgmijvqxevkwssx.supabase.co/functions/v1/street21-admin", KEY="9pvHKCBkura9CY0KY3ctNMophJuB3O6pua2_xkpU4c8"; let products=[];
+const API="https://wifkqfgmijvqxevkwssx.supabase.co/functions/v1/street21-admin";
+const KEY="9pvHKCBkura9CY0KY3ctNMophJuB3O6pua2_xkpU4c8";
+let products=[];
 const $=id=>document.getElementById(id);
-async function call(action,data={}){const r=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:KEY,action,...data})});const t=await r.text();let j;try{j=JSON.parse(t)}catch{j={error:t}}if(!r.ok)throw new Error(j.error||("HTTP "+r.status));return j}
-async function load(){try{const d=await call("list");render(Array.isArray(d)?d:[])}catch(e){$("products").innerHTML='<div class="error">'+esc(e.message)+'</div>'}}
-function render(list){products=list;if(!list.length){$("products").innerHTML="<p>No hay productos todavía.</p>";return}
-$("products").innerHTML=list.map(p=>'<div class="product"><h3>'+esc(p.name||"Sin nombre")+'</h3><p><b>Precio publicado: Q'+esc(p.price??"")+'</b></p><p>Contra entrega: Q'+esc(p.cod_price??"—")+' · Transferencia: Q'+esc(p.transfer_price??"—")+'</p><p>'+esc(p.description||"")+'</p><div>'+(p.images||[]).map(u=>'<img class="thumb" src="'+esc(u)+'">').join("")+'</div><p><span class="badge">'+(p.sold_out?"AGOTADO":"DISPONIBLE")+'</span></p><div class="row"><button class="gray" onclick="toggle(\''+esc(p.id)+'\','+(!p.sold_out)+')">'+(p.sold_out?"Poner disponible":"Marcar agotado")+'</button><button class="gray" onclick="edit(\''+esc(p.id)+'\')">Editar</button><button class="danger" onclick="del(\''+esc(p.id)+'\')">Eliminar</button></div></div>').join("")}
-window.toggle=async(id,s)=>{try{await call("soldout",{id,sold_out:s});load()}catch(e){alert(e.message)}};
-window.del=async id=>{if(!confirm("¿Eliminar este producto?"))return;try{await call("delete",{id});load()}catch(e){alert(e.message)}};
-window.edit=id=>{const p=products.find(x=>String(x.id)===String(id));if(!p)return;$("name").value=p.name||"";$("price").value=p.price??"";$("codPrice").value=p.cod_price??"";$("transferPrice").value=p.transfer_price??"";$("description").value=p.description||"";$("addBtn").dataset.id=p.id;$("addBtn").textContent="Guardar cambios";scrollTo({top:0,behavior:"smooth"})};
-$("addBtn").onclick=async()=>{const id=$("addBtn").dataset.id,name=$("name").value.trim(),price=$("price").value,codPrice=$("codPrice").value,transferPrice=$("transferPrice").value,description=$("description").value.trim(),fs=[...$("photos").files];if(!name||price===""||codPrice===""||transferPrice==="")return msg("Completa precio, contra entrega y transferencia.");if(fs.length>4)return msg("Máximo 4 fotos.");$("addBtn").disabled=true;msg(id?"Guardando...":"Agregando...",false);try{const images=fs.length?await Promise.all(fs.map(read)):null;if(id)await call("update",{id,name,price:Number(price),cod_price:Number(codPrice),transfer_price:Number(transferPrice),description,...(images?{images}:{})});else await call("add",{name,price:Number(price),cod_price:Number(codPrice),transfer_price:Number(transferPrice),description,images:images||[]});$("name").value="";$("price").value="";$("codPrice").value="";$("transferPrice").value="";$("description").value="";$("photos").value="";delete $("addBtn").dataset.id;$("addBtn").textContent="Agregar producto";msg("Listo ✅",false);load()}catch(e){msg(e.message)}finally{$("addBtn").disabled=false}};
+
+async function call(action,data={}){
+  const r=await fetch(API,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({key:KEY,action,...data})
+  });
+
+  // La función puede responder 204 después de guardar. Un 204 no tiene cuerpo.
+  if(r.status===204) return {ok:true};
+
+  const t=await r.text();
+  let j={};
+  try{j=t?JSON.parse(t):{ok:true};}catch{j={error:t};}
+  if(!r.ok) throw new Error(j.error||("HTTP "+r.status));
+  return j;
+}
+
+async function getProducts(){
+  const d=await call("list");
+  return Array.isArray(d)?d:[];
+}
+
+async function load(){
+  try{
+    const d=await getProducts();
+    render(d);
+  }catch(e){
+    $("products").innerHTML='<div class="error">'+esc(e.message)+'</div>';
+  }
+}
+
+function render(list){
+  products=list;
+  if(!list.length){$("products").innerHTML="<p>No hay productos todavía.</p>";return;}
+  $("products").innerHTML=list.map(p=>
+    '<div class="product">'+
+    '<h3>'+esc(p.name||"Sin nombre")+'</h3>'+    '<p><b>Precio publicado: Q'+esc(p.price??"")+'</b></p>'+    '<p>Contra entrega: Q'+esc(p.cod_price??"—")+' · Transferencia: Q'+esc(p.transfer_price??"—")+'</p>'+    '<p>'+esc(p.description||"")+'</p>'+    '<div>'+(Array.isArray(p.images)?p.images:[]).map(u=>'<img class="thumb" src="'+esc(u)+'">').join("")+'</div>'+    '<p><span class="badge">'+(p.sold_out?"AGOTADO":"DISPONIBLE")+'</span></p>'+    '<div class="row">'+    '<button class="gray" onclick="toggle(\''+esc(p.id)+'\','+(!p.sold_out)+')">'+(p.sold_out?"Poner disponible":"Marcar agotado")+'</button>'+    '<button class="gray" onclick="edit(\''+esc(p.id)+'\')">Editar</button>'+    '<button class="danger" onclick="del(\''+esc(p.id)+'\')">Eliminar</button>'+    '</div></div>'
+  ).join("");
+}
+
+window.toggle=async(id,s)=>{
+  try{await call("soldout",{id,sold_out:s});await load();}
+  catch(e){alert(e.message);}
+};
+
+window.del=async id=>{
+  if(!confirm("¿Eliminar este producto?"))return;
+  try{await call("delete",{id});await load();}
+  catch(e){alert(e.message);}
+};
+
+window.edit=id=>{
+  const p=products.find(x=>String(x.id)===String(id));
+  if(!p)return;
+  $("name").value=p.name||"";
+  $("price").value=p.price??"";
+  $("codPrice").value=p.cod_price??"";
+  $("transferPrice").value=p.transfer_price??"";
+  $("description").value=p.description||"";
+  $("addBtn").dataset.id=p.id;
+  $("addBtn").textContent="Guardar cambios";
+  scrollTo({top:0,behavior:"smooth"});
+};
+
+function sameNumber(a,b){return Number(a)===Number(b);}
+
+async function verifySaved(id,expected,mode){
+  const list=await getProducts();
+  if(mode==="update"){
+    const p=list.find(x=>String(x.id)===String(id));
+    return !!p && p.name===expected.name && sameNumber(p.price,expected.price) && sameNumber(p.cod_price,expected.cod_price) && sameNumber(p.transfer_price,expected.transfer_price);
+  }
+  return list.some(p=>p.name===expected.name && sameNumber(p.price,expected.price) && sameNumber(p.cod_price,expected.cod_price) && sameNumber(p.transfer_price,expected.transfer_price));
+}
+
+$("addBtn").onclick=async()=>{
+  const id=$("addBtn").dataset.id;
+  const name=$("name").value.trim();
+  const price=$("price").value;
+  const codPrice=$("codPrice").value;
+  const transferPrice=$("transferPrice").value;
+  const description=$("description").value.trim();
+  const fs=[...$("photos").files];
+
+  if(!name||price===""||codPrice===""||transferPrice==="")
+    return msg("Completa precio, contra entrega y transferencia.");
+  if(fs.length>4)return msg("Máximo 4 fotos.");
+
+  $("addBtn").disabled=true;
+  msg(id?"Guardando cambios...":"Agregando producto...",false);
+
+  const expected={name,price:Number(price),cod_price:Number(codPrice),transfer_price:Number(transferPrice)};
+
+  try{
+    const images=fs.length?await Promise.all(fs.map(read)):null;
+    try{
+      if(id){
+        await call("update",{id,...expected,description,...(images?{images}:{})});
+      }else{
+        await call("add",{...expected,description,images:images||[]});
+      }
+    }catch(firstError){
+      // Si Supabase guardó pero falló al devolver una respuesta 204, comprobamos la base antes de mostrar error.
+      const saved=await verifySaved(id,expected,id?"update":"add");
+      if(!saved)throw firstError;
+    }
+
+    $("name").value="";
+    $("price").value="";
+    $("codPrice").value="";
+    $("transferPrice").value="";
+    $("description").value="";
+    $("photos").value="";
+    delete $("addBtn").dataset.id;
+    $("addBtn").textContent="Agregar producto";
+    msg("Guardado correctamente ✅",false);
+    await load();
+  }catch(e){
+    msg("No se pudo guardar: "+e.message);
+  }finally{
+    $("addBtn").disabled=false;
+  }
+};
+
 $("refreshBtn").onclick=load;
-function read(f){return new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok({name:f.name,type:f.type,data:String(r.result).split(",")[1]});r.onerror=no;r.readAsDataURL(f)})}
-function msg(t,err=true){$("msg").textContent=t;$("msg").className="msg "+(err?"error":"success")}
-function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}load();
+
+function read(f){
+  return new Promise((ok,no)=>{
+    const r=new FileReader();
+    r.onload=()=>ok({name:f.name,type:f.type,data:String(r.result).split(",")[1]});
+    r.onerror=no;
+    r.readAsDataURL(f);
+  });
+}
+
+function msg(t,err=true){
+  $("msg").textContent=t;
+  $("msg").className="msg "+(err?"error":"success");
+}
+
+function esc(s){
+  return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+load();
 </script></body></html>
