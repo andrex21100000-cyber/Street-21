@@ -1038,59 +1038,74 @@ async function loadProducts(){
   productsBox.innerHTML =
     '<div class="empty">Cargando productos...</div>';
 
-  try{
+  const headers = {
+    "apikey": SUPABASE_KEY,
+    "Authorization": "Bearer " + SUPABASE_KEY,
+    "Accept": "application/json"
+  };
 
-    const response = await fetch(
-      SUPABASE_URL +
-      "/rest/v1/products" +
-      "?select=*" +
-      "&order=created_at.desc",
-      {
+  const urls = [
+    SUPABASE_URL + "/rest/v1/products?select=*&order=created_at.desc",
+    SUPABASE_URL + "/rest/v1/products?select=*"
+  ];
+
+  let lastError = null;
+
+  for(const url of urls){
+    try{
+      const response = await fetch(url, {
         method:"GET",
-        headers:{
-          "apikey":SUPABASE_KEY,
-          "Authorization":"Bearer " + SUPABASE_KEY
-        }
+        headers:headers,
+        cache:"no-store"
+      });
+
+      if(!response.ok){
+        const errorText = await response.text();
+        throw new Error(
+          "Supabase " + response.status + ": " + errorText
+        );
       }
-    );
 
-    if(!response.ok){
+      const products = await response.json();
 
-      const errorText = await response.text();
+      if(!Array.isArray(products)){
+        throw new Error("La respuesta de Supabase no es una lista de productos.");
+      }
 
-      throw new Error(
-        "Error de Supabase: " +
-        response.status +
-        " " +
-        errorText
-      );
+      allProducts = products;
+
+      // Si la consulta alternativa no trae created_at, no importa:
+      // solo ordenamos localmente cuando ese campo existe.
+      if(products.some(function(product){
+        return product && product.created_at;
+      })){
+        allProducts.sort(function(a,b){
+          return String(b.created_at || "").localeCompare(
+            String(a.created_at || "")
+          );
+        });
+      }
+
+      renderProducts(allProducts);
+      renderSearchResults("");
+      return;
+
+    }catch(error){
+      console.error("Error cargando productos:", error);
+      lastError = error;
     }
-
-    const products = await response.json();
-
-    console.log("Productos recibidos:",products);
-
-    if(!Array.isArray(products)){
-      throw new Error(
-        "La respuesta de Supabase no es válida."
-      );
-    }
-
-    allProducts = products;
-    renderProducts(products);
-    renderSearchResults("");
-
-  }catch(error){
-
-    console.error("ERROR:",error);
-
-    productsBox.innerHTML =
-      '<div class="error-box">' +
-      '<strong>No se pudieron cargar los productos.</strong>' +
-      '<br>' +
-      escapeHtml(error.message) +
-      '</div>';
   }
+
+  productsBox.innerHTML =
+    '<div class="error-box">' +
+    '<strong>No se pudieron cargar los productos.</strong>' +
+    '<br>' +
+    escapeHtml(lastError ? lastError.message : "Error desconocido.") +
+    '<br><br>' +
+    '<button type="button" class="primary-btn" onclick="loadProducts()">' +
+    'Reintentar' +
+    '</button>' +
+    '</div>';
 }
 
 function renderProducts(list){
