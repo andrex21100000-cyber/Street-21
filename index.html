@@ -93,6 +93,16 @@ header{
   transform:translateY(-1px);
 }
 
+.instagram-header-btn svg{
+  width:19px;
+  height:19px;
+  fill:none;
+}
+
+.instagram-header-btn:hover{
+  border-color:#fff;
+}
+
 .whatsapp-header-btn svg{
   width:19px;
   height:19px;
@@ -820,6 +830,13 @@ textarea{min-height:90px}
         <path d="M16.01 3.2c-7.06 0-12.8 5.74-12.8 12.8 0 2.26.59 4.38 1.62 6.22L3.2 28.8l6.76-1.59a12.75 12.75 0 0 0 6.05 1.53h.01c7.06 0 12.8-5.74 12.8-12.8S23.08 3.2 16.01 3.2zm0 23.45h-.01c-1.98 0-3.91-.53-5.6-1.54l-.4-.24-4.01.94.95-3.91-.26-.4a10.62 10.62 0 1 1 9.33 5.15z"/>
       </svg>
     </button>
+    <button class="header-icon-btn instagram-header-btn" id="instagramBtn" type="button" aria-label="Abrir Instagram" title="@street21_gt_">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <rect x="3" y="3" width="18" height="18" rx="5" ry="5" fill="none" stroke="currentColor" stroke-width="2"/>
+    <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/>
+    <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/>
+  </svg>
+</button>
     <button class="header-icon-btn" id="cartBtn" type="button" aria-label="Abrir carrito">🛒<span class="cart-count" id="cartCount">0</span></button>
   </div>
 </header>
@@ -934,12 +951,12 @@ textarea{min-height:90px}
 
       <label class="payment-option">
         <input type="radio" name="payment" value="cod" required>
-        Pago contra entrega — <span id="codPrice">Precio no configurado</span>
+        Pago contra entrega — <span id="codPrice">Q300</span>
       </label>
 
       <label class="payment-option">
         <input type="radio" name="payment" value="transfer">
-        Depósito / transferencia — <span id="transferPrice">Precio no configurado</span>
+        Depósito / transferencia — <span id="transferPrice">Q285</span>
       </label>
 
       <div class="bank-box" id="bankBox">
@@ -1022,15 +1039,29 @@ function getImages(product){
 }
 
 function getCodPrice(product){
-  if(product.cod_price === null || product.cod_price === undefined || product.cod_price === "") return null;
-  const value = Number(product.cod_price);
-  return Number.isFinite(value) ? value : null;
+
+  if(
+    product.cod_price !== null &&
+    product.cod_price !== undefined &&
+    product.cod_price !== ""
+  ){
+    return Number(product.cod_price);
+  }
+
+  return 300;
 }
 
 function getTransferPrice(product){
-  if(product.transfer_price === null || product.transfer_price === undefined || product.transfer_price === "") return null;
-  const value = Number(product.transfer_price);
-  return Number.isFinite(value) ? value : null;
+
+  if(
+    product.transfer_price !== null &&
+    product.transfer_price !== undefined &&
+    product.transfer_price !== ""
+  ){
+    return Number(product.transfer_price);
+  }
+
+  return 285;
 }
 
 async function loadProducts(){
@@ -1038,74 +1069,59 @@ async function loadProducts(){
   productsBox.innerHTML =
     '<div class="empty">Cargando productos...</div>';
 
-  const headers = {
-    "apikey": SUPABASE_KEY,
-    "Authorization": "Bearer " + SUPABASE_KEY,
-    "Accept": "application/json"
-  };
+  try{
 
-  const urls = [
-    SUPABASE_URL + "/rest/v1/products?select=*&order=created_at.desc",
-    SUPABASE_URL + "/rest/v1/products?select=*"
-  ];
-
-  let lastError = null;
-
-  for(const url of urls){
-    try{
-      const response = await fetch(url, {
+    const response = await fetch(
+      SUPABASE_URL +
+      "/rest/v1/products" +
+      "?select=*" +
+      "&order=created_at.desc",
+      {
         method:"GET",
-        headers:headers,
-        cache:"no-store"
-      });
-
-      if(!response.ok){
-        const errorText = await response.text();
-        throw new Error(
-          "Supabase " + response.status + ": " + errorText
-        );
+        headers:{
+          "apikey":SUPABASE_KEY,
+          "Authorization":"Bearer " + SUPABASE_KEY
+        }
       }
+    );
 
-      const products = await response.json();
+    if(!response.ok){
 
-      if(!Array.isArray(products)){
-        throw new Error("La respuesta de Supabase no es una lista de productos.");
-      }
+      const errorText = await response.text();
 
-      allProducts = products;
-
-      // Si la consulta alternativa no trae created_at, no importa:
-      // solo ordenamos localmente cuando ese campo existe.
-      if(products.some(function(product){
-        return product && product.created_at;
-      })){
-        allProducts.sort(function(a,b){
-          return String(b.created_at || "").localeCompare(
-            String(a.created_at || "")
-          );
-        });
-      }
-
-      renderProducts(allProducts);
-      renderSearchResults("");
-      return;
-
-    }catch(error){
-      console.error("Error cargando productos:", error);
-      lastError = error;
+      throw new Error(
+        "Error de Supabase: " +
+        response.status +
+        " " +
+        errorText
+      );
     }
-  }
 
-  productsBox.innerHTML =
-    '<div class="error-box">' +
-    '<strong>No se pudieron cargar los productos.</strong>' +
-    '<br>' +
-    escapeHtml(lastError ? lastError.message : "Error desconocido.") +
-    '<br><br>' +
-    '<button type="button" class="primary-btn" onclick="loadProducts()">' +
-    'Reintentar' +
-    '</button>' +
-    '</div>';
+    const products = await response.json();
+
+    console.log("Productos recibidos:",products);
+
+    if(!Array.isArray(products)){
+      throw new Error(
+        "La respuesta de Supabase no es válida."
+      );
+    }
+
+    allProducts = products;
+    renderProducts(products);
+    renderSearchResults("");
+
+  }catch(error){
+
+    console.error("ERROR:",error);
+
+    productsBox.innerHTML =
+      '<div class="error-box">' +
+      '<strong>No se pudieron cargar los productos.</strong>' +
+      '<br>' +
+      escapeHtml(error.message) +
+      '</div>';
+  }
 }
 
 function renderProducts(list){
@@ -1229,11 +1245,17 @@ function renderProducts(list){
         "Precio publicado: Q" +
         Number(product.price || 0).toLocaleString("es-GT");
 
-      document.getElementById("codPrice").textContent =
-        codPrice === null ? "Precio no configurado" : "Q" + codPrice.toLocaleString("es-GT");
+      document.getElementById(
+        "codPrice"
+      ).textContent =
+        "Q" +
+        codPrice.toLocaleString("es-GT");
 
-      document.getElementById("transferPrice").textContent =
-        transferPrice === null ? "Precio no configurado" : "Q" + transferPrice.toLocaleString("es-GT");
+      document.getElementById(
+        "transferPrice"
+      ).textContent =
+        "Q" +
+        transferPrice.toLocaleString("es-GT");
 
       document.querySelectorAll(
         'input[name="payment"]'
@@ -1504,6 +1526,10 @@ document.getElementById("whatsappBtn").onclick = function(){
     "?text=" + encodeURIComponent(message);
 };
 
+document.getElementById("instagramBtn").onclick = function(){
+  window.open("https://www.instagram.com/street21_gt_/", "_blank");
+};
+
 document.getElementById(
   "closeBuy"
 ).onclick = function(){
@@ -1570,12 +1596,10 @@ document.getElementById(
   const isTransfer =
     selectedPayment.value === "transfer";
 
-  const total = isTransfer ? transferPrice : codPrice;
-
-  if(total === null){
-    alert("Este producto todavía no tiene configurado el precio para esa forma de pago.");
-    return;
-  }
+  const total =
+    isTransfer
+      ? transferPrice
+      : codPrice;
 
   const paymentText =
     isTransfer
